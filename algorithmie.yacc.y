@@ -32,7 +32,7 @@ int div_zero = FALSE;
 Input:		Fonctions Main 
 
 //Fonction x(int a, int b) : entier
-Fonctions : 	fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFontion Fonctions | procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuFontion Fonctions | ; 
+Fonctions : 	fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFontion Fonctions | procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuProcedure Fonctions | ; 
 
 //Liste des arguments, ou rien
 ContenuParenthesesFonction : Type Argument Arguments | ;
@@ -45,7 +45,37 @@ Type : TypeReel | TypeEntier
 //... , int b
 Arguments : virgule Type Argument
 
+//On pourrait faire une simplification avec Declarations debut ListeInstructions
+ContenuFonction : Declarations debut ListeInstructions Retourner fin
+ContenuProcedure : Declarations debut ListeInstructions fin
+Main : Declarations debut ListeInstructions fin
 
+Retourner : retourne variable
+
+Declarations : Declaration Declarations | ;
+Declaration : variable double_point Type
+
+ListeInstructions : Ensemble ListeInstructions | ;
+
+Ensemble : Complexe | Instruction | ;
+
+Complexe : debut_si Operation_logique debut_alors Complexe_Si fin_si
+| debut_switch variable debut_parmi Complexe_Switch fin_switch
+| debut_pour variable debut_pour_allant_de Variable_ou_nombre debut_pour_a POUR_PAS faire Ensemble fin_pour
+| debut_tant_que Opération_logique faire Ensemble fin_tant_que
+| faire Ensemble debut_tant_que Opération_logique fin_tant_que
+
+POUR_PAS : debut_pour_pas Variable_ou_nombre | ; 
+Variable_ou_nombre : variable | ENTIER
+ 
+Complexe_Si : Ensemble Complexe_Sinon fin_si
+
+Complexe_Sinon : sinon Ensemble | ;
+
+Complexe_Switch :
+
+
+Opération_logiqe
 
 
 

@@ -75,6 +75,7 @@ ET|OU|NON			{ return *yytext; }
 [POUR|pour|Pour]	 {return debut_pour; }
 
 [allant de|ALLANT DE]   {return debut_pour_allant_de;}
+[à|A|a]		 {return debut_pour_a;}		
 [par pas de|PAR PAS DE] {return debut_pour_pas;}
 {faire|FAIRE]			{return faire;}
 [finpour|FINPOUR|FinPour]	{return fin_pour;}
