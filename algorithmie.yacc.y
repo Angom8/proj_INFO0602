@@ -12,6 +12,17 @@ int div_zero = FALSE;
 %nonassoc '-'
 %right '/'
 
+%token  parentheseOuverte parentheseFermee
+%token virgule, double_point
+%token fonction, procedure, algorithme
+%token declaration
+%token debut, fin, retourne
+%token debut_si, debut_alors, sinon, fin_si
+%token debut_switch,debut_parmi, fin_switch
+%token debut_pour, debut_pour_allant_de, debut_pour_pas, faire, fin_pour
+%token debut_tant_que, fin_tant_que
+%token typeReel, typeEntier, variable
+
 %%
 
 
