@@ -53,6 +53,7 @@ Algorithme { return algorithme ; }
 \)         { return parentheseFermee; } 
 ,	   { return virgule; }
 :	   { return double_point ;}
+=	   { return egal ;}
 
 \n 	    ;
 
@@ -88,6 +89,9 @@ ET|OU|NON			{ return *yytext; }
 [entier|Entier] {return typeEntier;}
 {[a-zA-Z][a-zA-Z0-9_]*} [return variable ;}
 
+/* I/O */
+[lire]		{return lire;}
+[ecrire] {return ecrire;}
 
 {ESPACE}			; 
 

@@ -43,7 +43,8 @@ Retour : double_point Type ;
 Type : TypeReel | TypeEntier
 
 //... , int b
-Arguments : virgule Type Argument
+Arguments : virgule Type Argument Arguments  | ; 
+Argument : variable
 
 //On pourrait faire une simplification avec Declarations debut ListeInstructions
 ContenuFonction : Declarations debut ListeInstructions Retourner fin
@@ -72,16 +73,26 @@ Complexe_Si : Ensemble Complexe_Sinon fin_si
 
 Complexe_Sinon : sinon Ensemble | ;
 
-Complexe_Switch :
+Complexe_Switch : ENTIER double_point Ensemble fin Complexe_Switch | defaut double_point Ensemble fin
 
 
-Opération_logiqe
+Opération_logique : 
+
+
+Instruction : Calcul | AppelFonction
+
+AppelFonctionSeule : lire parentheseOuverte variable parentheseFermee | ecrire parentheseOuverte variable parentheseFermee | variable parentheseOuverte ListeArgumentsAppel parentheseFermee
+
+ListeArgumentsAppel : ArgumentAppel ArgumentsAppel | ;
+ArgumentsAppel : virgule ArgumentAppel | ;
+ArgumentAppel : variable
+
 
 
 
 lprogramme : programme | lprogramme programme;
 
-programme: 
+Operation_logique: 
 	  operateur_logique '\n' {
 		if(div_zero != TRUE){
 			if($1 == TRUE){
