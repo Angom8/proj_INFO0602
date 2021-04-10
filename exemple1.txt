@@ -1,0 +1,15 @@
+Fonction ajouter(entier x,y) : entier
+Déclaration
+z : entier
+Début
+z = x + y
+retourner z
+Fin
+Algorithme
+Déclarations
+x, y: entier
+Début
+lire(x)
+lire(y)
+écrire(ajouter(x,y))
+Fin

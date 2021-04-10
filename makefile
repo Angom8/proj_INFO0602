@@ -1,13 +1,13 @@
-EXECUTABLE = calculatrice
+EXECUTABLE = algorithmie
 
-LEX_FILE = calculatrice.lex
-YACC_FILE = calculatrice.yacc.y
+LEX_FILE = algorithmie.lex
+YACC_FILE = algorithmie.yacc.y
 
 LEX = flex
 LEXFLAGS = 
 LEXLIB = -lfl
 YACC = yacc
-YACCFLAGS = -d
+YACCFLAGS = -vd
 YACCLIB = 
 
 $(EXECUTABLE): y.tab.o lex.yy.o
