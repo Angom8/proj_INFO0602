@@ -23,7 +23,27 @@ int div_zero = FALSE;
 %token debut_tant_que, fin_tant_que
 %token typeReel, typeEntier, variable
 
+%start Input
+
 %%
+
+ /* On peut déclarer des variables globales, mais ensuite, il faut passer à l'execution du main. 
+    La déclaration/définition de fonctions peut se faire avant ou après le main  */ 
+Input:		Fonctions Main 
+
+//Fonction x(int a, int b) : entier
+Fonctions : 	fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFontion Fonctions | procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuFontion Fonctions | ; 
+
+//Liste des arguments, ou rien
+ContenuParenthesesFonction : Type Argument Arguments | ;
+
+//La fonction a un retour, ou non. Si on ne séparait pas les procédures des fonctions : | ;
+Retour : double_point Type ;
+
+Type : TypeReel | TypeEntier
+
+//... , int b
+Arguments : virgule Type Argument
 
 
 
