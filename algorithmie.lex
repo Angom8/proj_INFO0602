@@ -5,17 +5,19 @@
 void yyerror(const char *erreurMsg);
 %}
 
+
+
 %option yylineno
-%x BLOCK_COMMENT
-%x LINE_COMMENT
+%x commentaire_etoile
+%x commentaire_doubleslash
 %%
-"/*" 			{BEGIN BLOCK_COMMENT;};
-<BLOCK_COMMENT>"*/" 	{BEGIN INITIAL;};
-<BLOCK_COMMENT>.	{};                // consume all characters 
-<BLOCK_COMMENT>\n     	{};                // consume all lines
-"//"         			{BEGIN LINE_COMMENT;};
-<LINE_COMMENT>\n 		{BEGIN INITIAL;};
-<LINE_COMMENT>.         {} ;               // consume all characters
+"/*" 			{BEGIN commentaire_etoile;};
+<commentaire_etoile>"*/" 	{BEGIN INITIAL;};
+<commentaire_etoile>.	{};               
+<commentaire_etoile>\n     	{};                
+"//"         			{BEGIN commentaire_doubleslash;};
+<commentaire_doubleslash>\n 		{BEGIN INITIAL;};
+<commentaire_doubleslash>.         {} ;              
 
 
 
