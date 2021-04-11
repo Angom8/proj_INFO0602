@@ -9,19 +9,24 @@ NOMBRE [0-9]+
 /* Nombres */
 
 
-[0-9]+				{
+NOMBRE 			{
 					yylval = atoi(yytext);
 					return ENTIER;
 				}
-^-[0-9]+			{
+^-NOMBRE			{
 					yylval = atoi(yytext);
 					return ENTIER;
 				}
-
-/* Opérations
-
-[-+\/\*\n]			{ return *yytext; }
-
+				
+NOMBRE.NOMBRE			{
+					yylval = atoi(yytext);
+					return REEL;
+				}
+^-NOMBRE.NOMBRE		{
+					yylval = atoi(yytext);
+					return REEL;
+				}
+			
 
 /* Langage courant */
 
@@ -43,7 +48,27 @@ Algorithme { return algorithme ; }
 
 \n 	    ;
 
-/* Conditionnelles * /
+
+/* Operateurs */
+
++		{return operateur_plus;}
+/		{return operateur_diviser;}
+-		{return operateur_moins;}
+%		{return operateur_modulo;}
+*		{return operateur_multiplier;}
+
+ET		{return operateur_et;}
+OU		{return operateur_ou;}
+NON		{return operateur_non;}
+
+==		{return operateur_egal_egal;}
+<=		{return operateur_inferieur_egal;}
+>=		{return operateur_superieur_egal;}
+!=		{return operateur_non_egal;}
+<		{return operateur_inferieur;}
+>		{return operateur_superieur;}
+
+/* Conditionnelles */
 
 [SI|si] {return debut_si ;}
 [ALORS|alors] {return debut_alors ;}
@@ -53,9 +78,6 @@ Algorithme { return algorithme ; }
 [CAS|cas] {return debut_switch ;}
 [parmi|PARMI] {return debut_parmi};
 [FinCas|FINCAS|FinCAS|fincas] {return fin_switch ;}
-
-==|<=|>=|<|>|!=		{ return *yytext; }
-ET|OU|NON			{ return *yytext; }
 
 /* Boucles */
 
@@ -68,8 +90,9 @@ ET|OU|NON			{ return *yytext; }
 [finpour|FINPOUR|FinPour]	{return fin_pour;}
 [TantQue|tantque|TANTQUE]	{return debut_tant_que;}
 [fintantque|FINTANTQUE|FinTantQue] {return fin_tant_que;}
+[defaut|DEFAUT] {return defaut;}
 
-/* Types *}
+/* Types */
 
 [réél|reel|Reel|Réel] {return typeReel;}
 [entier|Entier] {return typeEntier;}

@@ -1,0 +1,2642 @@
+Terminaux inutilisés dans la grammaire
+
+    '+'
+    '*'
+    '-'
+    '/'
+    algorithme
+    declaration
+
+
+Règles inutiles dans l'analyseur à cause de conflits
+
+   58 operateur_relationnel: Expression operateur_egal_egal Expression
+   59                      | Expression operateur_inferieur_egal Expression
+   60                      | Expression operateur_superieur_egal Expression
+   61                      | Expression operateur_inferieur Expression
+   62                      | Expression operateur_superieur Expression
+   63                      | Expression operateur_non_egal Expression
+
+   64 Expression: ENTIER
+   69           | Expression operateur_plus Expression
+   70           | Expression operateur_moins Expression
+   71           | Expression operateur_multiplier Expression
+   72           | Expression operateur_diviser Expression
+   73           | Expression operateur_modulo Expression
+
+
+État 15 conflits: 8 décalage/réduction, 1 réduction/réduction
+État 28 conflits: 1 décalage/réduction
+État 32 conflits: 8 décalage/réduction, 2 réduction/réduction
+État 43 conflits: 29 réduction/réduction
+État 53 conflits: 11 décalage/réduction
+État 70 conflits: 6 décalage/réduction
+État 96 conflits: 14 réduction/réduction
+État 97 conflits: 5 décalage/réduction
+État 103 conflits: 8 décalage/réduction, 1 réduction/réduction
+État 112 conflits: 5 décalage/réduction, 29 réduction/réduction
+État 113 conflits: 5 décalage/réduction, 29 réduction/réduction
+État 114 conflits: 5 décalage/réduction, 29 réduction/réduction
+État 115 conflits: 5 décalage/réduction, 29 réduction/réduction
+État 116 conflits: 5 décalage/réduction, 29 réduction/réduction
+État 117 conflits: 5 décalage/réduction, 3 réduction/réduction
+État 118 conflits: 5 décalage/réduction, 3 réduction/réduction
+État 119 conflits: 5 décalage/réduction, 3 réduction/réduction
+État 120 conflits: 5 décalage/réduction, 3 réduction/réduction
+État 121 conflits: 5 décalage/réduction, 3 réduction/réduction
+État 122 conflits: 5 décalage/réduction, 3 réduction/réduction
+État 135 conflits: 8 décalage/réduction, 1 réduction/réduction
+
+
+Grammaire
+
+    0 $accept: DebutGlobal $end
+
+    1 DebutGlobal: Fonctions Main
+
+    2 Fonctions: fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFonction Fonctions
+    3          | procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuProcedure Fonctions
+    4          | %empty
+
+    5 ContenuParenthesesFonction: Type Argument Arguments
+    6                           | %empty
+
+    7 Retour: double_point Type
+
+    8 Type: typeReel
+    9     | typeEntier
+
+   10 Arguments: virgule Type Argument Arguments
+   11          | %empty
+
+   12 Argument: variable
+
+   13 ContenuFonction: Declarations debut ListeInstructions Retourner fin
+
+   14 ContenuProcedure: Declarations debut ListeInstructions fin
+
+   15 Main: Declarations debut ListeInstructions fin
+
+   16 Retourner: retourne Variable_ou_nombre
+
+   17 Declarations: Declaration Declarations
+   18             | %empty
+
+   19 Declaration: variable double_point Type
+
+   20 ListeInstructions: Ensemble ListeInstructions
+   21                  | %empty
+
+   22 Ensemble: Complexe
+   23         | Instruction
+   24         | %empty
+
+   25 Complexe: debut_si Operation_logique debut_alors Complexe_Si fin_si
+   26         | debut_switch variable debut_parmi Complexe_Switch fin_switch
+   27         | debut_pour variable debut_pour_allant_de Variable_ou_nombre debut_pour_a POUR_PAS faire Ensemble fin_pour
+   28         | debut_tant_que Operation_logique faire Ensemble fin_tant_que
+   29         | faire Ensemble debut_tant_que Operation_logique fin_tant_que
+
+   30 POUR_PAS: debut_pour_pas Variable_ou_nombre
+   31         | %empty
+
+   32 Variable_ou_nombre: variable
+   33                   | ENTIER
+
+   34 Complexe_Si: Ensemble Complexe_Sinon fin_si
+
+   35 Complexe_Sinon: sinon Ensemble
+   36               | %empty
+
+   37 Complexe_Switch: ENTIER double_point Ensemble fin Complexe_Switch
+   38                | defaut double_point Ensemble fin
+
+   39 Operation_logique: %empty
+
+   40 Instruction: Calcul
+   41            | AppelFonctionSeule
+
+   42 AppelFonctionSeule: lire parentheseOuverte variable parentheseFermee
+   43                   | ecrire parentheseOuverte variable parentheseFermee
+   44                   | variable parentheseOuverte ListeArgumentsAppel parentheseFermee
+
+   45 ListeArgumentsAppel: ArgumentAppel ArgumentsAppel
+   46                    | %empty
+
+   47 ArgumentsAppel: virgule ArgumentAppel
+   48               | %empty
+
+   49 ArgumentAppel: variable
+
+   50 Calcul: variable egal Operation
+
+   51 Operation: parentheseOuverte Expression parentheseFermee
+   52          | Expression
+
+   53 Operation_logique: operateur_logique '\n'
+   54                  | operateur_relationnel '\n'
+
+   55 operateur_logique: operateur_relationnel operateur_et operateur_relationnel
+   56                  | operateur_relationnel operateur_ou operateur_relationnel
+   57                  | operateur_non operateur_relationnel
+
+   58 operateur_relationnel: Expression operateur_egal_egal Expression
+   59                      | Expression operateur_inferieur_egal Expression
+   60                      | Expression operateur_superieur_egal Expression
+   61                      | Expression operateur_inferieur Expression
+   62                      | Expression operateur_superieur Expression
+   63                      | Expression operateur_non_egal Expression
+
+   64 Expression: ENTIER
+   65           | REEL
+   66           | Variable_ou_nombre
+   67           | Operation
+   68           | variable parentheseOuverte ListeArgumentsAppel parentheseFermee
+   69           | Expression operateur_plus Expression
+   70           | Expression operateur_moins Expression
+   71           | Expression operateur_multiplier Expression
+   72           | Expression operateur_diviser Expression
+   73           | Expression operateur_modulo Expression
+
+
+Terminaux, suivis des règles où ils apparaissent
+
+    $end (0) 0
+    '\n' (10) 53 54
+    '*' (42)
+    '+' (43)
+    '-' (45)
+    '/' (47)
+    error (256)
+    ENTIER (258) 33 37 64
+    REEL (259) 65
+    parentheseOuverte (260) 2 3 42 43 44 51 68
+    parentheseFermee (261) 2 3 42 43 44 51 68
+    virgule (262) 10 47
+    double_point (263) 7 19 37 38
+    egal (264) 50
+    fonction (265) 2
+    procedure (266) 3
+    algorithme (267)
+    lire (268) 42
+    ecrire (269) 43
+    declaration (270)
+    debut (271) 13 14 15
+    fin (272) 13 14 15 37 38
+    retourne (273) 16
+    debut_si (274) 25
+    debut_alors (275) 25
+    sinon (276) 35
+    fin_si (277) 25 34
+    debut_switch (278) 26
+    debut_parmi (279) 26
+    fin_switch (280) 26
+    defaut (281) 38
+    debut_pour (282) 27
+    debut_pour_allant_de (283) 27
+    debut_pour_pas (284) 30
+    faire (285) 27 28 29
+    fin_pour (286) 27
+    debut_pour_a (287) 27
+    debut_tant_que (288) 28 29
+    fin_tant_que (289) 28 29
+    typeReel (290) 8
+    typeEntier (291) 9
+    variable (292) 2 3 12 19 26 27 32 42 43 44 49 50 68
+    operateur_plus (293) 69
+    operateur_diviser (294) 72
+    operateur_moins (295) 70
+    operateur_modulo (296) 73
+    operateur_multiplier (297) 71
+    operateur_et (298) 55
+    operateur_ou (299) 56
+    operateur_non (300) 57
+    operateur_egal_egal (301) 58
+    operateur_inferieur_egal (302) 59
+    operateur_superieur_egal (303) 60
+    operateur_non_egal (304) 63
+    operateur_inferieur (305) 61
+    operateur_superieur (306) 62
+
+
+Non-terminaux, suivis des règles où ils apparaissent
+
+    $accept (57)
+        à gauche: 0
+    DebutGlobal (58)
+        à gauche: 1
+        à droite: 0
+    Fonctions (59)
+        à gauche: 2 3 4
+        à droite: 1 2 3
+    ContenuParenthesesFonction (60)
+        à gauche: 5 6
+        à droite: 2 3
+    Retour (61)
+        à gauche: 7
+        à droite: 2
+    Type (62)
+        à gauche: 8 9
+        à droite: 5 7 10 19
+    Arguments (63)
+        à gauche: 10 11
+        à droite: 5 10
+    Argument (64)
+        à gauche: 12
+        à droite: 5 10
+    ContenuFonction (65)
+        à gauche: 13
+        à droite: 2
+    ContenuProcedure (66)
+        à gauche: 14
+        à droite: 3
+    Main (67)
+        à gauche: 15
+        à droite: 1
+    Retourner (68)
+        à gauche: 16
+        à droite: 13
+    Declarations (69)
+        à gauche: 17 18
+        à droite: 13 14 15 17
+    Declaration (70)
+        à gauche: 19
+        à droite: 17
+    ListeInstructions (71)
+        à gauche: 20 21
+        à droite: 13 14 15 20
+    Ensemble (72)
+        à gauche: 22 23 24
+        à droite: 20 27 28 29 34 35 37 38
+    Complexe (73)
+        à gauche: 25 26 27 28 29
+        à droite: 22
+    POUR_PAS (74)
+        à gauche: 30 31
+        à droite: 27
+    Variable_ou_nombre (75)
+        à gauche: 32 33
+        à droite: 16 27 30 66
+    Complexe_Si (76)
+        à gauche: 34
+        à droite: 25
+    Complexe_Sinon (77)
+        à gauche: 35 36
+        à droite: 34
+    Complexe_Switch (78)
+        à gauche: 37 38
+        à droite: 26 37
+    Operation_logique (79)
+        à gauche: 39 53 54
+        à droite: 25 28 29
+    Instruction (80)
+        à gauche: 40 41
+        à droite: 23
+    AppelFonctionSeule (81)
+        à gauche: 42 43 44
+        à droite: 41
+    ListeArgumentsAppel (82)
+        à gauche: 45 46
+        à droite: 44 68
+    ArgumentsAppel (83)
+        à gauche: 47 48
+        à droite: 45
+    ArgumentAppel (84)
+        à gauche: 49
+        à droite: 45 47
+    Calcul (85)
+        à gauche: 50
+        à droite: 40
+    Operation (86)
+        à gauche: 51 52
+        à droite: 50 67
+    operateur_logique (87)
+        à gauche: 55 56 57
+        à droite: 53
+    operateur_relationnel (88)
+        à gauche: 58 59 60 61 62 63
+        à droite: 54 55 56 57
+    Expression (89)
+        à gauche: 64 65 66 67 68 69 70 71 72 73
+        à droite: 51 52 58 59 60 61 62 63 69 70 71 72 73
+
+
+État 0
+
+    0 $accept: . DebutGlobal $end
+
+    fonction   décalage et aller à l'état 1
+    procedure  décalage et aller à l'état 2
+
+    $défaut  réduction par utilisation de la règle 4 (Fonctions)
+
+    DebutGlobal  aller à l'état 3
+    Fonctions    aller à l'état 4
+
+
+État 1
+
+    2 Fonctions: fonction . variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFonction Fonctions
+
+    variable  décalage et aller à l'état 5
+
+
+État 2
+
+    3 Fonctions: procedure . variable parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuProcedure Fonctions
+
+    variable  décalage et aller à l'état 6
+
+
+État 3
+
+    0 $accept: DebutGlobal . $end
+
+    $end  décalage et aller à l'état 7
+
+
+État 4
+
+    1 DebutGlobal: Fonctions . Main
+
+    variable  décalage et aller à l'état 8
+
+    $défaut  réduction par utilisation de la règle 18 (Declarations)
+
+    Main          aller à l'état 9
+    Declarations  aller à l'état 10
+    Declaration   aller à l'état 11
+
+
+État 5
+
+    2 Fonctions: fonction variable . parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFonction Fonctions
+
+    parentheseOuverte  décalage et aller à l'état 12
+
+
+État 6
+
+    3 Fonctions: procedure variable . parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuProcedure Fonctions
+
+    parentheseOuverte  décalage et aller à l'état 13
+
+
+État 7
+
+    0 $accept: DebutGlobal $end .
+
+    $défaut  accepter
+
+
+État 8
+
+   19 Declaration: variable . double_point Type
+
+    double_point  décalage et aller à l'état 14
+
+
+État 9
+
+    1 DebutGlobal: Fonctions Main .
+
+    $défaut  réduction par utilisation de la règle 1 (DebutGlobal)
+
+
+État 10
+
+   15 Main: Declarations . debut ListeInstructions fin
+
+    debut  décalage et aller à l'état 15
+
+
+État 11
+
+   17 Declarations: Declaration . Declarations
+
+    variable  décalage et aller à l'état 8
+
+    $défaut  réduction par utilisation de la règle 18 (Declarations)
+
+    Declarations  aller à l'état 16
+    Declaration   aller à l'état 11
+
+
+État 12
+
+    2 Fonctions: fonction variable parentheseOuverte . ContenuParenthesesFonction parentheseFermee Retour ContenuFonction Fonctions
+
+    typeReel    décalage et aller à l'état 17
+    typeEntier  décalage et aller à l'état 18
+
+    $défaut  réduction par utilisation de la règle 6 (ContenuParenthesesFonction)
+
+    ContenuParenthesesFonction  aller à l'état 19
+    Type                        aller à l'état 20
+
+
+État 13
+
+    3 Fonctions: procedure variable parentheseOuverte . ContenuParenthesesFonction parentheseFermee ContenuProcedure Fonctions
+
+    typeReel    décalage et aller à l'état 17
+    typeEntier  décalage et aller à l'état 18
+
+    $défaut  réduction par utilisation de la règle 6 (ContenuParenthesesFonction)
+
+    ContenuParenthesesFonction  aller à l'état 21
+    Type                        aller à l'état 20
+
+
+État 14
+
+   19 Declaration: variable double_point . Type
+
+    typeReel    décalage et aller à l'état 17
+    typeEntier  décalage et aller à l'état 18
+
+    Type  aller à l'état 22
+
+
+État 15
+
+   15 Main: Declarations debut . ListeInstructions fin
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    lire            [réduction par utilisation de la règle 24 (Ensemble)]
+    ecrire          [réduction par utilisation de la règle 24 (Ensemble)]
+    fin             réduction par utilisation de la règle 21 (ListeInstructions)
+    fin             [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_si        [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_switch    [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_pour      [réduction par utilisation de la règle 24 (Ensemble)]
+    faire           [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_tant_que  [réduction par utilisation de la règle 24 (Ensemble)]
+    variable        [réduction par utilisation de la règle 24 (Ensemble)]
+    $défaut        réduction par utilisation de la règle 21 (ListeInstructions)
+
+    ListeInstructions   aller à l'état 31
+    Ensemble            aller à l'état 32
+    Complexe            aller à l'état 33
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 16
+
+   17 Declarations: Declaration Declarations .
+
+    $défaut  réduction par utilisation de la règle 17 (Declarations)
+
+
+État 17
+
+    8 Type: typeReel .
+
+    $défaut  réduction par utilisation de la règle 8 (Type)
+
+
+État 18
+
+    9 Type: typeEntier .
+
+    $défaut  réduction par utilisation de la règle 9 (Type)
+
+
+État 19
+
+    2 Fonctions: fonction variable parentheseOuverte ContenuParenthesesFonction . parentheseFermee Retour ContenuFonction Fonctions
+
+    parentheseFermee  décalage et aller à l'état 37
+
+
+État 20
+
+    5 ContenuParenthesesFonction: Type . Argument Arguments
+
+    variable  décalage et aller à l'état 38
+
+    Argument  aller à l'état 39
+
+
+État 21
+
+    3 Fonctions: procedure variable parentheseOuverte ContenuParenthesesFonction . parentheseFermee ContenuProcedure Fonctions
+
+    parentheseFermee  décalage et aller à l'état 40
+
+
+État 22
+
+   19 Declaration: variable double_point Type .
+
+    $défaut  réduction par utilisation de la règle 19 (Declaration)
+
+
+État 23
+
+   42 AppelFonctionSeule: lire . parentheseOuverte variable parentheseFermee
+
+    parentheseOuverte  décalage et aller à l'état 41
+
+
+État 24
+
+   43 AppelFonctionSeule: ecrire . parentheseOuverte variable parentheseFermee
+
+    parentheseOuverte  décalage et aller à l'état 42
+
+
+État 25
+
+   25 Complexe: debut_si . Operation_logique debut_alors Complexe_Si fin_si
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+    operateur_non      décalage et aller à l'état 47
+
+    $défaut  réduction par utilisation de la règle 39 (Operation_logique)
+
+    Variable_ou_nombre     aller à l'état 48
+    Operation_logique      aller à l'état 49
+    Operation              aller à l'état 50
+    operateur_logique      aller à l'état 51
+    operateur_relationnel  aller à l'état 52
+    Expression             aller à l'état 53
+
+
+État 26
+
+   26 Complexe: debut_switch . variable debut_parmi Complexe_Switch fin_switch
+
+    variable  décalage et aller à l'état 54
+
+
+État 27
+
+   27 Complexe: debut_pour . variable debut_pour_allant_de Variable_ou_nombre debut_pour_a POUR_PAS faire Ensemble fin_pour
+
+    variable  décalage et aller à l'état 55
+
+
+État 28
+
+   29 Complexe: faire . Ensemble debut_tant_que Operation_logique fin_tant_que
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    debut_tant_que  [réduction par utilisation de la règle 24 (Ensemble)]
+
+    Ensemble            aller à l'état 56
+    Complexe            aller à l'état 33
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 29
+
+   28 Complexe: debut_tant_que . Operation_logique faire Ensemble fin_tant_que
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+    operateur_non      décalage et aller à l'état 47
+
+    $défaut  réduction par utilisation de la règle 39 (Operation_logique)
+
+    Variable_ou_nombre     aller à l'état 48
+    Operation_logique      aller à l'état 57
+    Operation              aller à l'état 50
+    operateur_logique      aller à l'état 51
+    operateur_relationnel  aller à l'état 52
+    Expression             aller à l'état 53
+
+
+État 30
+
+   44 AppelFonctionSeule: variable . parentheseOuverte ListeArgumentsAppel parentheseFermee
+   50 Calcul: variable . egal Operation
+
+    parentheseOuverte  décalage et aller à l'état 58
+    egal               décalage et aller à l'état 59
+
+
+État 31
+
+   15 Main: Declarations debut ListeInstructions . fin
+
+    fin  décalage et aller à l'état 60
+
+
+État 32
+
+   20 ListeInstructions: Ensemble . ListeInstructions
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    lire            [réduction par utilisation de la règle 24 (Ensemble)]
+    ecrire          [réduction par utilisation de la règle 24 (Ensemble)]
+    fin             réduction par utilisation de la règle 21 (ListeInstructions)
+    fin             [réduction par utilisation de la règle 24 (Ensemble)]
+    retourne        réduction par utilisation de la règle 21 (ListeInstructions)
+    retourne        [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_si        [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_switch    [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_pour      [réduction par utilisation de la règle 24 (Ensemble)]
+    faire           [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_tant_que  [réduction par utilisation de la règle 24 (Ensemble)]
+    variable        [réduction par utilisation de la règle 24 (Ensemble)]
+    $défaut        réduction par utilisation de la règle 21 (ListeInstructions)
+
+    ListeInstructions   aller à l'état 61
+    Ensemble            aller à l'état 32
+    Complexe            aller à l'état 33
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 33
+
+   22 Ensemble: Complexe .
+
+    $défaut  réduction par utilisation de la règle 22 (Ensemble)
+
+
+État 34
+
+   23 Ensemble: Instruction .
+
+    $défaut  réduction par utilisation de la règle 23 (Ensemble)
+
+
+État 35
+
+   41 Instruction: AppelFonctionSeule .
+
+    $défaut  réduction par utilisation de la règle 41 (Instruction)
+
+
+État 36
+
+   40 Instruction: Calcul .
+
+    $défaut  réduction par utilisation de la règle 40 (Instruction)
+
+
+État 37
+
+    2 Fonctions: fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee . Retour ContenuFonction Fonctions
+
+    double_point  décalage et aller à l'état 62
+
+    Retour  aller à l'état 63
+
+
+État 38
+
+   12 Argument: variable .
+
+    $défaut  réduction par utilisation de la règle 12 (Argument)
+
+
+État 39
+
+    5 ContenuParenthesesFonction: Type Argument . Arguments
+
+    virgule  décalage et aller à l'état 64
+
+    $défaut  réduction par utilisation de la règle 11 (Arguments)
+
+    Arguments  aller à l'état 65
+
+
+État 40
+
+    3 Fonctions: procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee . ContenuProcedure Fonctions
+
+    variable  décalage et aller à l'état 8
+
+    $défaut  réduction par utilisation de la règle 18 (Declarations)
+
+    ContenuProcedure  aller à l'état 66
+    Declarations      aller à l'état 67
+    Declaration       aller à l'état 11
+
+
+État 41
+
+   42 AppelFonctionSeule: lire parentheseOuverte . variable parentheseFermee
+
+    variable  décalage et aller à l'état 68
+
+
+État 42
+
+   43 AppelFonctionSeule: ecrire parentheseOuverte . variable parentheseFermee
+
+    variable  décalage et aller à l'état 69
+
+
+État 43
+
+   33 Variable_ou_nombre: ENTIER .
+   64 Expression: ENTIER .
+
+    parentheseFermee          réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    parentheseFermee          [réduction par utilisation de la règle 64 (Expression)]
+    lire                      réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    lire                      [réduction par utilisation de la règle 64 (Expression)]
+    ecrire                    réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    ecrire                    [réduction par utilisation de la règle 64 (Expression)]
+    fin                       réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    fin                       [réduction par utilisation de la règle 64 (Expression)]
+    retourne                  réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    retourne                  [réduction par utilisation de la règle 64 (Expression)]
+    debut_si                  réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    debut_si                  [réduction par utilisation de la règle 64 (Expression)]
+    sinon                     réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    sinon                     [réduction par utilisation de la règle 64 (Expression)]
+    fin_si                    réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    fin_si                    [réduction par utilisation de la règle 64 (Expression)]
+    debut_switch              réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    debut_switch              [réduction par utilisation de la règle 64 (Expression)]
+    debut_pour                réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    debut_pour                [réduction par utilisation de la règle 64 (Expression)]
+    faire                     réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    faire                     [réduction par utilisation de la règle 64 (Expression)]
+    fin_pour                  réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    fin_pour                  [réduction par utilisation de la règle 64 (Expression)]
+    debut_tant_que            réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    debut_tant_que            [réduction par utilisation de la règle 64 (Expression)]
+    fin_tant_que              réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    fin_tant_que              [réduction par utilisation de la règle 64 (Expression)]
+    variable                  réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    variable                  [réduction par utilisation de la règle 64 (Expression)]
+    operateur_plus            réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_plus            [réduction par utilisation de la règle 64 (Expression)]
+    operateur_diviser         réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_diviser         [réduction par utilisation de la règle 64 (Expression)]
+    operateur_moins           réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_moins           [réduction par utilisation de la règle 64 (Expression)]
+    operateur_modulo          réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_modulo          [réduction par utilisation de la règle 64 (Expression)]
+    operateur_multiplier      réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_multiplier      [réduction par utilisation de la règle 64 (Expression)]
+    operateur_et              réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_et              [réduction par utilisation de la règle 64 (Expression)]
+    operateur_ou              réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_ou              [réduction par utilisation de la règle 64 (Expression)]
+    operateur_egal_egal       réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_egal_egal       [réduction par utilisation de la règle 64 (Expression)]
+    operateur_inferieur_egal  réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_inferieur_egal  [réduction par utilisation de la règle 64 (Expression)]
+    operateur_superieur_egal  réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_superieur_egal  [réduction par utilisation de la règle 64 (Expression)]
+    operateur_non_egal        réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_non_egal        [réduction par utilisation de la règle 64 (Expression)]
+    operateur_inferieur       réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_inferieur       [réduction par utilisation de la règle 64 (Expression)]
+    operateur_superieur       réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    operateur_superieur       [réduction par utilisation de la règle 64 (Expression)]
+    '\n'                      réduction par utilisation de la règle 33 (Variable_ou_nombre)
+    '\n'                      [réduction par utilisation de la règle 64 (Expression)]
+    $défaut                  réduction par utilisation de la règle 33 (Variable_ou_nombre)
+
+
+État 44
+
+   65 Expression: REEL .
+
+    $défaut  réduction par utilisation de la règle 65 (Expression)
+
+
+État 45
+
+   51 Operation: parentheseOuverte . Expression parentheseFermee
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 70
+
+
+État 46
+
+   32 Variable_ou_nombre: variable .
+   68 Expression: variable . parentheseOuverte ListeArgumentsAppel parentheseFermee
+
+    parentheseOuverte  décalage et aller à l'état 71
+
+    $défaut  réduction par utilisation de la règle 32 (Variable_ou_nombre)
+
+
+État 47
+
+   57 operateur_logique: operateur_non . operateur_relationnel
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre     aller à l'état 48
+    Operation              aller à l'état 50
+    operateur_relationnel  aller à l'état 72
+    Expression             aller à l'état 53
+
+
+État 48
+
+   66 Expression: Variable_ou_nombre .
+
+    $défaut  réduction par utilisation de la règle 66 (Expression)
+
+
+État 49
+
+   25 Complexe: debut_si Operation_logique . debut_alors Complexe_Si fin_si
+
+    debut_alors  décalage et aller à l'état 73
+
+
+État 50
+
+   67 Expression: Operation .
+
+    $défaut  réduction par utilisation de la règle 67 (Expression)
+
+
+État 51
+
+   53 Operation_logique: operateur_logique . '\n'
+
+    '\n'  décalage et aller à l'état 74
+
+
+État 52
+
+   54 Operation_logique: operateur_relationnel . '\n'
+   55 operateur_logique: operateur_relationnel . operateur_et operateur_relationnel
+   56                  | operateur_relationnel . operateur_ou operateur_relationnel
+
+    operateur_et  décalage et aller à l'état 75
+    operateur_ou  décalage et aller à l'état 76
+    '\n'          décalage et aller à l'état 77
+
+
+État 53
+
+   52 Operation: Expression .
+   58 operateur_relationnel: Expression . operateur_egal_egal Expression
+   59                      | Expression . operateur_inferieur_egal Expression
+   60                      | Expression . operateur_superieur_egal Expression
+   61                      | Expression . operateur_inferieur Expression
+   62                      | Expression . operateur_superieur Expression
+   63                      | Expression . operateur_non_egal Expression
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus            décalage et aller à l'état 78
+    operateur_diviser         décalage et aller à l'état 79
+    operateur_moins           décalage et aller à l'état 80
+    operateur_modulo          décalage et aller à l'état 81
+    operateur_multiplier      décalage et aller à l'état 82
+    operateur_egal_egal       décalage et aller à l'état 83
+    operateur_inferieur_egal  décalage et aller à l'état 84
+    operateur_superieur_egal  décalage et aller à l'état 85
+    operateur_non_egal        décalage et aller à l'état 86
+    operateur_inferieur       décalage et aller à l'état 87
+    operateur_superieur       décalage et aller à l'état 88
+
+    operateur_plus            [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser         [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins           [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo          [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_egal_egal       [réduction par utilisation de la règle 52 (Operation)]
+    operateur_inferieur_egal  [réduction par utilisation de la règle 52 (Operation)]
+    operateur_superieur_egal  [réduction par utilisation de la règle 52 (Operation)]
+    operateur_non_egal        [réduction par utilisation de la règle 52 (Operation)]
+    operateur_inferieur       [réduction par utilisation de la règle 52 (Operation)]
+    operateur_superieur       [réduction par utilisation de la règle 52 (Operation)]
+
+
+État 54
+
+   26 Complexe: debut_switch variable . debut_parmi Complexe_Switch fin_switch
+
+    debut_parmi  décalage et aller à l'état 89
+
+
+État 55
+
+   27 Complexe: debut_pour variable . debut_pour_allant_de Variable_ou_nombre debut_pour_a POUR_PAS faire Ensemble fin_pour
+
+    debut_pour_allant_de  décalage et aller à l'état 90
+
+
+État 56
+
+   29 Complexe: faire Ensemble . debut_tant_que Operation_logique fin_tant_que
+
+    debut_tant_que  décalage et aller à l'état 91
+
+
+État 57
+
+   28 Complexe: debut_tant_que Operation_logique . faire Ensemble fin_tant_que
+
+    faire  décalage et aller à l'état 92
+
+
+État 58
+
+   44 AppelFonctionSeule: variable parentheseOuverte . ListeArgumentsAppel parentheseFermee
+
+    variable  décalage et aller à l'état 93
+
+    $défaut  réduction par utilisation de la règle 46 (ListeArgumentsAppel)
+
+    ListeArgumentsAppel  aller à l'état 94
+    ArgumentAppel        aller à l'état 95
+
+
+État 59
+
+   50 Calcul: variable egal . Operation
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 96
+    Expression          aller à l'état 97
+
+
+État 60
+
+   15 Main: Declarations debut ListeInstructions fin .
+
+    $défaut  réduction par utilisation de la règle 15 (Main)
+
+
+État 61
+
+   20 ListeInstructions: Ensemble ListeInstructions .
+
+    $défaut  réduction par utilisation de la règle 20 (ListeInstructions)
+
+
+État 62
+
+    7 Retour: double_point . Type
+
+    typeReel    décalage et aller à l'état 17
+    typeEntier  décalage et aller à l'état 18
+
+    Type  aller à l'état 98
+
+
+État 63
+
+    2 Fonctions: fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour . ContenuFonction Fonctions
+
+    variable  décalage et aller à l'état 8
+
+    $défaut  réduction par utilisation de la règle 18 (Declarations)
+
+    ContenuFonction  aller à l'état 99
+    Declarations     aller à l'état 100
+    Declaration      aller à l'état 11
+
+
+État 64
+
+   10 Arguments: virgule . Type Argument Arguments
+
+    typeReel    décalage et aller à l'état 17
+    typeEntier  décalage et aller à l'état 18
+
+    Type  aller à l'état 101
+
+
+État 65
+
+    5 ContenuParenthesesFonction: Type Argument Arguments .
+
+    $défaut  réduction par utilisation de la règle 5 (ContenuParenthesesFonction)
+
+
+État 66
+
+    3 Fonctions: procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuProcedure . Fonctions
+
+    fonction   décalage et aller à l'état 1
+    procedure  décalage et aller à l'état 2
+
+    $défaut  réduction par utilisation de la règle 4 (Fonctions)
+
+    Fonctions  aller à l'état 102
+
+
+État 67
+
+   14 ContenuProcedure: Declarations . debut ListeInstructions fin
+
+    debut  décalage et aller à l'état 103
+
+
+État 68
+
+   42 AppelFonctionSeule: lire parentheseOuverte variable . parentheseFermee
+
+    parentheseFermee  décalage et aller à l'état 104
+
+
+État 69
+
+   43 AppelFonctionSeule: ecrire parentheseOuverte variable . parentheseFermee
+
+    parentheseFermee  décalage et aller à l'état 105
+
+
+État 70
+
+   51 Operation: parentheseOuverte Expression . parentheseFermee
+   52          | Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    parentheseFermee      décalage et aller à l'état 106
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    parentheseFermee      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_plus        [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser     [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins       [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier  [réduction par utilisation de la règle 52 (Operation)]
+
+
+État 71
+
+   68 Expression: variable parentheseOuverte . ListeArgumentsAppel parentheseFermee
+
+    variable  décalage et aller à l'état 93
+
+    $défaut  réduction par utilisation de la règle 46 (ListeArgumentsAppel)
+
+    ListeArgumentsAppel  aller à l'état 107
+    ArgumentAppel        aller à l'état 95
+
+
+État 72
+
+   57 operateur_logique: operateur_non operateur_relationnel .
+
+    $défaut  réduction par utilisation de la règle 57 (operateur_logique)
+
+
+État 73
+
+   25 Complexe: debut_si Operation_logique debut_alors . Complexe_Si fin_si
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    $défaut  réduction par utilisation de la règle 24 (Ensemble)
+
+    Ensemble            aller à l'état 108
+    Complexe            aller à l'état 33
+    Complexe_Si         aller à l'état 109
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 74
+
+   53 Operation_logique: operateur_logique '\n' .
+
+    $défaut  réduction par utilisation de la règle 53 (Operation_logique)
+
+
+État 75
+
+   55 operateur_logique: operateur_relationnel operateur_et . operateur_relationnel
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre     aller à l'état 48
+    Operation              aller à l'état 50
+    operateur_relationnel  aller à l'état 110
+    Expression             aller à l'état 53
+
+
+État 76
+
+   56 operateur_logique: operateur_relationnel operateur_ou . operateur_relationnel
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre     aller à l'état 48
+    Operation              aller à l'état 50
+    operateur_relationnel  aller à l'état 111
+    Expression             aller à l'état 53
+
+
+État 77
+
+   54 Operation_logique: operateur_relationnel '\n' .
+
+    $défaut  réduction par utilisation de la règle 54 (Operation_logique)
+
+
+État 78
+
+   69 Expression: Expression operateur_plus . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 112
+
+
+État 79
+
+   72 Expression: Expression operateur_diviser . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 113
+
+
+État 80
+
+   70 Expression: Expression operateur_moins . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 114
+
+
+État 81
+
+   73 Expression: Expression operateur_modulo . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 115
+
+
+État 82
+
+   71 Expression: Expression operateur_multiplier . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 116
+
+
+État 83
+
+   58 operateur_relationnel: Expression operateur_egal_egal . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 117
+
+
+État 84
+
+   59 operateur_relationnel: Expression operateur_inferieur_egal . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 118
+
+
+État 85
+
+   60 operateur_relationnel: Expression operateur_superieur_egal . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 119
+
+
+État 86
+
+   63 operateur_relationnel: Expression operateur_non_egal . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 120
+
+
+État 87
+
+   61 operateur_relationnel: Expression operateur_inferieur . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 121
+
+
+État 88
+
+   62 operateur_relationnel: Expression operateur_superieur . Expression
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+
+    Variable_ou_nombre  aller à l'état 48
+    Operation           aller à l'état 50
+    Expression          aller à l'état 122
+
+
+État 89
+
+   26 Complexe: debut_switch variable debut_parmi . Complexe_Switch fin_switch
+
+    ENTIER  décalage et aller à l'état 123
+    defaut  décalage et aller à l'état 124
+
+    Complexe_Switch  aller à l'état 125
+
+
+État 90
+
+   27 Complexe: debut_pour variable debut_pour_allant_de . Variable_ou_nombre debut_pour_a POUR_PAS faire Ensemble fin_pour
+
+    ENTIER    décalage et aller à l'état 126
+    variable  décalage et aller à l'état 127
+
+    Variable_ou_nombre  aller à l'état 128
+
+
+État 91
+
+   29 Complexe: faire Ensemble debut_tant_que . Operation_logique fin_tant_que
+
+    ENTIER             décalage et aller à l'état 43
+    REEL               décalage et aller à l'état 44
+    parentheseOuverte  décalage et aller à l'état 45
+    variable           décalage et aller à l'état 46
+    operateur_non      décalage et aller à l'état 47
+
+    $défaut  réduction par utilisation de la règle 39 (Operation_logique)
+
+    Variable_ou_nombre     aller à l'état 48
+    Operation_logique      aller à l'état 129
+    Operation              aller à l'état 50
+    operateur_logique      aller à l'état 51
+    operateur_relationnel  aller à l'état 52
+    Expression             aller à l'état 53
+
+
+État 92
+
+   28 Complexe: debut_tant_que Operation_logique faire . Ensemble fin_tant_que
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    $défaut  réduction par utilisation de la règle 24 (Ensemble)
+
+    Ensemble            aller à l'état 130
+    Complexe            aller à l'état 33
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 93
+
+   49 ArgumentAppel: variable .
+
+    $défaut  réduction par utilisation de la règle 49 (ArgumentAppel)
+
+
+État 94
+
+   44 AppelFonctionSeule: variable parentheseOuverte ListeArgumentsAppel . parentheseFermee
+
+    parentheseFermee  décalage et aller à l'état 131
+
+
+État 95
+
+   45 ListeArgumentsAppel: ArgumentAppel . ArgumentsAppel
+
+    virgule  décalage et aller à l'état 132
+
+    $défaut  réduction par utilisation de la règle 48 (ArgumentsAppel)
+
+    ArgumentsAppel  aller à l'état 133
+
+
+État 96
+
+   50 Calcul: variable egal Operation .
+   67 Expression: Operation .
+
+    lire                  réduction par utilisation de la règle 50 (Calcul)
+    lire                  [réduction par utilisation de la règle 67 (Expression)]
+    ecrire                réduction par utilisation de la règle 50 (Calcul)
+    ecrire                [réduction par utilisation de la règle 67 (Expression)]
+    fin                   réduction par utilisation de la règle 50 (Calcul)
+    fin                   [réduction par utilisation de la règle 67 (Expression)]
+    retourne              réduction par utilisation de la règle 50 (Calcul)
+    retourne              [réduction par utilisation de la règle 67 (Expression)]
+    debut_si              réduction par utilisation de la règle 50 (Calcul)
+    debut_si              [réduction par utilisation de la règle 67 (Expression)]
+    sinon                 réduction par utilisation de la règle 50 (Calcul)
+    sinon                 [réduction par utilisation de la règle 67 (Expression)]
+    fin_si                réduction par utilisation de la règle 50 (Calcul)
+    fin_si                [réduction par utilisation de la règle 67 (Expression)]
+    debut_switch          réduction par utilisation de la règle 50 (Calcul)
+    debut_switch          [réduction par utilisation de la règle 67 (Expression)]
+    debut_pour            réduction par utilisation de la règle 50 (Calcul)
+    debut_pour            [réduction par utilisation de la règle 67 (Expression)]
+    faire                 réduction par utilisation de la règle 50 (Calcul)
+    faire                 [réduction par utilisation de la règle 67 (Expression)]
+    fin_pour              réduction par utilisation de la règle 50 (Calcul)
+    fin_pour              [réduction par utilisation de la règle 67 (Expression)]
+    debut_tant_que        réduction par utilisation de la règle 50 (Calcul)
+    debut_tant_que        [réduction par utilisation de la règle 67 (Expression)]
+    fin_tant_que          réduction par utilisation de la règle 50 (Calcul)
+    fin_tant_que          [réduction par utilisation de la règle 67 (Expression)]
+    variable              réduction par utilisation de la règle 50 (Calcul)
+    variable              [réduction par utilisation de la règle 67 (Expression)]
+    operateur_plus        réduction par utilisation de la règle 67 (Expression)
+    operateur_diviser     réduction par utilisation de la règle 67 (Expression)
+    operateur_moins       réduction par utilisation de la règle 67 (Expression)
+    operateur_modulo      réduction par utilisation de la règle 67 (Expression)
+    operateur_multiplier  réduction par utilisation de la règle 67 (Expression)
+    $défaut              réduction par utilisation de la règle 50 (Calcul)
+
+
+État 97
+
+   52 Operation: Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    operateur_plus        [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser     [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins       [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier  [réduction par utilisation de la règle 52 (Operation)]
+    $défaut              réduction par utilisation de la règle 52 (Operation)
+
+
+État 98
+
+    7 Retour: double_point Type .
+
+    $défaut  réduction par utilisation de la règle 7 (Retour)
+
+
+État 99
+
+    2 Fonctions: fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFonction . Fonctions
+
+    fonction   décalage et aller à l'état 1
+    procedure  décalage et aller à l'état 2
+
+    $défaut  réduction par utilisation de la règle 4 (Fonctions)
+
+    Fonctions  aller à l'état 134
+
+
+État 100
+
+   13 ContenuFonction: Declarations . debut ListeInstructions Retourner fin
+
+    debut  décalage et aller à l'état 135
+
+
+État 101
+
+   10 Arguments: virgule Type . Argument Arguments
+
+    variable  décalage et aller à l'état 38
+
+    Argument  aller à l'état 136
+
+
+État 102
+
+    3 Fonctions: procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuProcedure Fonctions .
+
+    $défaut  réduction par utilisation de la règle 3 (Fonctions)
+
+
+État 103
+
+   14 ContenuProcedure: Declarations debut . ListeInstructions fin
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    lire            [réduction par utilisation de la règle 24 (Ensemble)]
+    ecrire          [réduction par utilisation de la règle 24 (Ensemble)]
+    fin             réduction par utilisation de la règle 21 (ListeInstructions)
+    fin             [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_si        [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_switch    [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_pour      [réduction par utilisation de la règle 24 (Ensemble)]
+    faire           [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_tant_que  [réduction par utilisation de la règle 24 (Ensemble)]
+    variable        [réduction par utilisation de la règle 24 (Ensemble)]
+    $défaut        réduction par utilisation de la règle 21 (ListeInstructions)
+
+    ListeInstructions   aller à l'état 137
+    Ensemble            aller à l'état 32
+    Complexe            aller à l'état 33
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 104
+
+   42 AppelFonctionSeule: lire parentheseOuverte variable parentheseFermee .
+
+    $défaut  réduction par utilisation de la règle 42 (AppelFonctionSeule)
+
+
+État 105
+
+   43 AppelFonctionSeule: ecrire parentheseOuverte variable parentheseFermee .
+
+    $défaut  réduction par utilisation de la règle 43 (AppelFonctionSeule)
+
+
+État 106
+
+   51 Operation: parentheseOuverte Expression parentheseFermee .
+
+    $défaut  réduction par utilisation de la règle 51 (Operation)
+
+
+État 107
+
+   68 Expression: variable parentheseOuverte ListeArgumentsAppel . parentheseFermee
+
+    parentheseFermee  décalage et aller à l'état 138
+
+
+État 108
+
+   34 Complexe_Si: Ensemble . Complexe_Sinon fin_si
+
+    sinon  décalage et aller à l'état 139
+
+    $défaut  réduction par utilisation de la règle 36 (Complexe_Sinon)
+
+    Complexe_Sinon  aller à l'état 140
+
+
+État 109
+
+   25 Complexe: debut_si Operation_logique debut_alors Complexe_Si . fin_si
+
+    fin_si  décalage et aller à l'état 141
+
+
+État 110
+
+   55 operateur_logique: operateur_relationnel operateur_et operateur_relationnel .
+
+    $défaut  réduction par utilisation de la règle 55 (operateur_logique)
+
+
+État 111
+
+   56 operateur_logique: operateur_relationnel operateur_ou operateur_relationnel .
+
+    $défaut  réduction par utilisation de la règle 56 (operateur_logique)
+
+
+État 112
+
+   52 Operation: Expression .
+   69 Expression: Expression . operateur_plus Expression
+   69           | Expression operateur_plus Expression .
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    parentheseFermee          réduction par utilisation de la règle 52 (Operation)
+    parentheseFermee          [réduction par utilisation de la règle 69 (Expression)]
+    lire                      réduction par utilisation de la règle 52 (Operation)
+    lire                      [réduction par utilisation de la règle 69 (Expression)]
+    ecrire                    réduction par utilisation de la règle 52 (Operation)
+    ecrire                    [réduction par utilisation de la règle 69 (Expression)]
+    fin                       réduction par utilisation de la règle 52 (Operation)
+    fin                       [réduction par utilisation de la règle 69 (Expression)]
+    retourne                  réduction par utilisation de la règle 52 (Operation)
+    retourne                  [réduction par utilisation de la règle 69 (Expression)]
+    debut_si                  réduction par utilisation de la règle 52 (Operation)
+    debut_si                  [réduction par utilisation de la règle 69 (Expression)]
+    sinon                     réduction par utilisation de la règle 52 (Operation)
+    sinon                     [réduction par utilisation de la règle 69 (Expression)]
+    fin_si                    réduction par utilisation de la règle 52 (Operation)
+    fin_si                    [réduction par utilisation de la règle 69 (Expression)]
+    debut_switch              réduction par utilisation de la règle 52 (Operation)
+    debut_switch              [réduction par utilisation de la règle 69 (Expression)]
+    debut_pour                réduction par utilisation de la règle 52 (Operation)
+    debut_pour                [réduction par utilisation de la règle 69 (Expression)]
+    faire                     réduction par utilisation de la règle 52 (Operation)
+    faire                     [réduction par utilisation de la règle 69 (Expression)]
+    fin_pour                  réduction par utilisation de la règle 52 (Operation)
+    fin_pour                  [réduction par utilisation de la règle 69 (Expression)]
+    debut_tant_que            réduction par utilisation de la règle 52 (Operation)
+    debut_tant_que            [réduction par utilisation de la règle 69 (Expression)]
+    fin_tant_que              réduction par utilisation de la règle 52 (Operation)
+    fin_tant_que              [réduction par utilisation de la règle 69 (Expression)]
+    variable                  réduction par utilisation de la règle 52 (Operation)
+    variable                  [réduction par utilisation de la règle 69 (Expression)]
+    operateur_plus            [réduction par utilisation de la règle 52 (Operation)]
+    operateur_plus            [réduction par utilisation de la règle 69 (Expression)]
+    operateur_diviser         [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser         [réduction par utilisation de la règle 69 (Expression)]
+    operateur_moins           [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins           [réduction par utilisation de la règle 69 (Expression)]
+    operateur_modulo          [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo          [réduction par utilisation de la règle 69 (Expression)]
+    operateur_multiplier      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier      [réduction par utilisation de la règle 69 (Expression)]
+    operateur_et              réduction par utilisation de la règle 52 (Operation)
+    operateur_et              [réduction par utilisation de la règle 69 (Expression)]
+    operateur_ou              réduction par utilisation de la règle 52 (Operation)
+    operateur_ou              [réduction par utilisation de la règle 69 (Expression)]
+    operateur_egal_egal       réduction par utilisation de la règle 52 (Operation)
+    operateur_egal_egal       [réduction par utilisation de la règle 69 (Expression)]
+    operateur_inferieur_egal  réduction par utilisation de la règle 52 (Operation)
+    operateur_inferieur_egal  [réduction par utilisation de la règle 69 (Expression)]
+    operateur_superieur_egal  réduction par utilisation de la règle 52 (Operation)
+    operateur_superieur_egal  [réduction par utilisation de la règle 69 (Expression)]
+    operateur_non_egal        réduction par utilisation de la règle 52 (Operation)
+    operateur_non_egal        [réduction par utilisation de la règle 69 (Expression)]
+    operateur_inferieur       réduction par utilisation de la règle 52 (Operation)
+    operateur_inferieur       [réduction par utilisation de la règle 69 (Expression)]
+    operateur_superieur       réduction par utilisation de la règle 52 (Operation)
+    operateur_superieur       [réduction par utilisation de la règle 69 (Expression)]
+    '\n'                      réduction par utilisation de la règle 52 (Operation)
+    '\n'                      [réduction par utilisation de la règle 69 (Expression)]
+    $défaut                  réduction par utilisation de la règle 52 (Operation)
+
+
+État 113
+
+   52 Operation: Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   72           | Expression operateur_diviser Expression .
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    parentheseFermee          réduction par utilisation de la règle 52 (Operation)
+    parentheseFermee          [réduction par utilisation de la règle 72 (Expression)]
+    lire                      réduction par utilisation de la règle 52 (Operation)
+    lire                      [réduction par utilisation de la règle 72 (Expression)]
+    ecrire                    réduction par utilisation de la règle 52 (Operation)
+    ecrire                    [réduction par utilisation de la règle 72 (Expression)]
+    fin                       réduction par utilisation de la règle 52 (Operation)
+    fin                       [réduction par utilisation de la règle 72 (Expression)]
+    retourne                  réduction par utilisation de la règle 52 (Operation)
+    retourne                  [réduction par utilisation de la règle 72 (Expression)]
+    debut_si                  réduction par utilisation de la règle 52 (Operation)
+    debut_si                  [réduction par utilisation de la règle 72 (Expression)]
+    sinon                     réduction par utilisation de la règle 52 (Operation)
+    sinon                     [réduction par utilisation de la règle 72 (Expression)]
+    fin_si                    réduction par utilisation de la règle 52 (Operation)
+    fin_si                    [réduction par utilisation de la règle 72 (Expression)]
+    debut_switch              réduction par utilisation de la règle 52 (Operation)
+    debut_switch              [réduction par utilisation de la règle 72 (Expression)]
+    debut_pour                réduction par utilisation de la règle 52 (Operation)
+    debut_pour                [réduction par utilisation de la règle 72 (Expression)]
+    faire                     réduction par utilisation de la règle 52 (Operation)
+    faire                     [réduction par utilisation de la règle 72 (Expression)]
+    fin_pour                  réduction par utilisation de la règle 52 (Operation)
+    fin_pour                  [réduction par utilisation de la règle 72 (Expression)]
+    debut_tant_que            réduction par utilisation de la règle 52 (Operation)
+    debut_tant_que            [réduction par utilisation de la règle 72 (Expression)]
+    fin_tant_que              réduction par utilisation de la règle 52 (Operation)
+    fin_tant_que              [réduction par utilisation de la règle 72 (Expression)]
+    variable                  réduction par utilisation de la règle 52 (Operation)
+    variable                  [réduction par utilisation de la règle 72 (Expression)]
+    operateur_plus            [réduction par utilisation de la règle 52 (Operation)]
+    operateur_plus            [réduction par utilisation de la règle 72 (Expression)]
+    operateur_diviser         [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser         [réduction par utilisation de la règle 72 (Expression)]
+    operateur_moins           [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins           [réduction par utilisation de la règle 72 (Expression)]
+    operateur_modulo          [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo          [réduction par utilisation de la règle 72 (Expression)]
+    operateur_multiplier      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier      [réduction par utilisation de la règle 72 (Expression)]
+    operateur_et              réduction par utilisation de la règle 52 (Operation)
+    operateur_et              [réduction par utilisation de la règle 72 (Expression)]
+    operateur_ou              réduction par utilisation de la règle 52 (Operation)
+    operateur_ou              [réduction par utilisation de la règle 72 (Expression)]
+    operateur_egal_egal       réduction par utilisation de la règle 52 (Operation)
+    operateur_egal_egal       [réduction par utilisation de la règle 72 (Expression)]
+    operateur_inferieur_egal  réduction par utilisation de la règle 52 (Operation)
+    operateur_inferieur_egal  [réduction par utilisation de la règle 72 (Expression)]
+    operateur_superieur_egal  réduction par utilisation de la règle 52 (Operation)
+    operateur_superieur_egal  [réduction par utilisation de la règle 72 (Expression)]
+    operateur_non_egal        réduction par utilisation de la règle 52 (Operation)
+    operateur_non_egal        [réduction par utilisation de la règle 72 (Expression)]
+    operateur_inferieur       réduction par utilisation de la règle 52 (Operation)
+    operateur_inferieur       [réduction par utilisation de la règle 72 (Expression)]
+    operateur_superieur       réduction par utilisation de la règle 52 (Operation)
+    operateur_superieur       [réduction par utilisation de la règle 72 (Expression)]
+    '\n'                      réduction par utilisation de la règle 52 (Operation)
+    '\n'                      [réduction par utilisation de la règle 72 (Expression)]
+    $défaut                  réduction par utilisation de la règle 52 (Operation)
+
+
+État 114
+
+   52 Operation: Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   70           | Expression operateur_moins Expression .
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    parentheseFermee          réduction par utilisation de la règle 52 (Operation)
+    parentheseFermee          [réduction par utilisation de la règle 70 (Expression)]
+    lire                      réduction par utilisation de la règle 52 (Operation)
+    lire                      [réduction par utilisation de la règle 70 (Expression)]
+    ecrire                    réduction par utilisation de la règle 52 (Operation)
+    ecrire                    [réduction par utilisation de la règle 70 (Expression)]
+    fin                       réduction par utilisation de la règle 52 (Operation)
+    fin                       [réduction par utilisation de la règle 70 (Expression)]
+    retourne                  réduction par utilisation de la règle 52 (Operation)
+    retourne                  [réduction par utilisation de la règle 70 (Expression)]
+    debut_si                  réduction par utilisation de la règle 52 (Operation)
+    debut_si                  [réduction par utilisation de la règle 70 (Expression)]
+    sinon                     réduction par utilisation de la règle 52 (Operation)
+    sinon                     [réduction par utilisation de la règle 70 (Expression)]
+    fin_si                    réduction par utilisation de la règle 52 (Operation)
+    fin_si                    [réduction par utilisation de la règle 70 (Expression)]
+    debut_switch              réduction par utilisation de la règle 52 (Operation)
+    debut_switch              [réduction par utilisation de la règle 70 (Expression)]
+    debut_pour                réduction par utilisation de la règle 52 (Operation)
+    debut_pour                [réduction par utilisation de la règle 70 (Expression)]
+    faire                     réduction par utilisation de la règle 52 (Operation)
+    faire                     [réduction par utilisation de la règle 70 (Expression)]
+    fin_pour                  réduction par utilisation de la règle 52 (Operation)
+    fin_pour                  [réduction par utilisation de la règle 70 (Expression)]
+    debut_tant_que            réduction par utilisation de la règle 52 (Operation)
+    debut_tant_que            [réduction par utilisation de la règle 70 (Expression)]
+    fin_tant_que              réduction par utilisation de la règle 52 (Operation)
+    fin_tant_que              [réduction par utilisation de la règle 70 (Expression)]
+    variable                  réduction par utilisation de la règle 52 (Operation)
+    variable                  [réduction par utilisation de la règle 70 (Expression)]
+    operateur_plus            [réduction par utilisation de la règle 52 (Operation)]
+    operateur_plus            [réduction par utilisation de la règle 70 (Expression)]
+    operateur_diviser         [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser         [réduction par utilisation de la règle 70 (Expression)]
+    operateur_moins           [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins           [réduction par utilisation de la règle 70 (Expression)]
+    operateur_modulo          [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo          [réduction par utilisation de la règle 70 (Expression)]
+    operateur_multiplier      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier      [réduction par utilisation de la règle 70 (Expression)]
+    operateur_et              réduction par utilisation de la règle 52 (Operation)
+    operateur_et              [réduction par utilisation de la règle 70 (Expression)]
+    operateur_ou              réduction par utilisation de la règle 52 (Operation)
+    operateur_ou              [réduction par utilisation de la règle 70 (Expression)]
+    operateur_egal_egal       réduction par utilisation de la règle 52 (Operation)
+    operateur_egal_egal       [réduction par utilisation de la règle 70 (Expression)]
+    operateur_inferieur_egal  réduction par utilisation de la règle 52 (Operation)
+    operateur_inferieur_egal  [réduction par utilisation de la règle 70 (Expression)]
+    operateur_superieur_egal  réduction par utilisation de la règle 52 (Operation)
+    operateur_superieur_egal  [réduction par utilisation de la règle 70 (Expression)]
+    operateur_non_egal        réduction par utilisation de la règle 52 (Operation)
+    operateur_non_egal        [réduction par utilisation de la règle 70 (Expression)]
+    operateur_inferieur       réduction par utilisation de la règle 52 (Operation)
+    operateur_inferieur       [réduction par utilisation de la règle 70 (Expression)]
+    operateur_superieur       réduction par utilisation de la règle 52 (Operation)
+    operateur_superieur       [réduction par utilisation de la règle 70 (Expression)]
+    '\n'                      réduction par utilisation de la règle 52 (Operation)
+    '\n'                      [réduction par utilisation de la règle 70 (Expression)]
+    $défaut                  réduction par utilisation de la règle 52 (Operation)
+
+
+État 115
+
+   52 Operation: Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+   73           | Expression operateur_modulo Expression .
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    parentheseFermee          réduction par utilisation de la règle 52 (Operation)
+    parentheseFermee          [réduction par utilisation de la règle 73 (Expression)]
+    lire                      réduction par utilisation de la règle 52 (Operation)
+    lire                      [réduction par utilisation de la règle 73 (Expression)]
+    ecrire                    réduction par utilisation de la règle 52 (Operation)
+    ecrire                    [réduction par utilisation de la règle 73 (Expression)]
+    fin                       réduction par utilisation de la règle 52 (Operation)
+    fin                       [réduction par utilisation de la règle 73 (Expression)]
+    retourne                  réduction par utilisation de la règle 52 (Operation)
+    retourne                  [réduction par utilisation de la règle 73 (Expression)]
+    debut_si                  réduction par utilisation de la règle 52 (Operation)
+    debut_si                  [réduction par utilisation de la règle 73 (Expression)]
+    sinon                     réduction par utilisation de la règle 52 (Operation)
+    sinon                     [réduction par utilisation de la règle 73 (Expression)]
+    fin_si                    réduction par utilisation de la règle 52 (Operation)
+    fin_si                    [réduction par utilisation de la règle 73 (Expression)]
+    debut_switch              réduction par utilisation de la règle 52 (Operation)
+    debut_switch              [réduction par utilisation de la règle 73 (Expression)]
+    debut_pour                réduction par utilisation de la règle 52 (Operation)
+    debut_pour                [réduction par utilisation de la règle 73 (Expression)]
+    faire                     réduction par utilisation de la règle 52 (Operation)
+    faire                     [réduction par utilisation de la règle 73 (Expression)]
+    fin_pour                  réduction par utilisation de la règle 52 (Operation)
+    fin_pour                  [réduction par utilisation de la règle 73 (Expression)]
+    debut_tant_que            réduction par utilisation de la règle 52 (Operation)
+    debut_tant_que            [réduction par utilisation de la règle 73 (Expression)]
+    fin_tant_que              réduction par utilisation de la règle 52 (Operation)
+    fin_tant_que              [réduction par utilisation de la règle 73 (Expression)]
+    variable                  réduction par utilisation de la règle 52 (Operation)
+    variable                  [réduction par utilisation de la règle 73 (Expression)]
+    operateur_plus            [réduction par utilisation de la règle 52 (Operation)]
+    operateur_plus            [réduction par utilisation de la règle 73 (Expression)]
+    operateur_diviser         [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser         [réduction par utilisation de la règle 73 (Expression)]
+    operateur_moins           [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins           [réduction par utilisation de la règle 73 (Expression)]
+    operateur_modulo          [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo          [réduction par utilisation de la règle 73 (Expression)]
+    operateur_multiplier      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier      [réduction par utilisation de la règle 73 (Expression)]
+    operateur_et              réduction par utilisation de la règle 52 (Operation)
+    operateur_et              [réduction par utilisation de la règle 73 (Expression)]
+    operateur_ou              réduction par utilisation de la règle 52 (Operation)
+    operateur_ou              [réduction par utilisation de la règle 73 (Expression)]
+    operateur_egal_egal       réduction par utilisation de la règle 52 (Operation)
+    operateur_egal_egal       [réduction par utilisation de la règle 73 (Expression)]
+    operateur_inferieur_egal  réduction par utilisation de la règle 52 (Operation)
+    operateur_inferieur_egal  [réduction par utilisation de la règle 73 (Expression)]
+    operateur_superieur_egal  réduction par utilisation de la règle 52 (Operation)
+    operateur_superieur_egal  [réduction par utilisation de la règle 73 (Expression)]
+    operateur_non_egal        réduction par utilisation de la règle 52 (Operation)
+    operateur_non_egal        [réduction par utilisation de la règle 73 (Expression)]
+    operateur_inferieur       réduction par utilisation de la règle 52 (Operation)
+    operateur_inferieur       [réduction par utilisation de la règle 73 (Expression)]
+    operateur_superieur       réduction par utilisation de la règle 52 (Operation)
+    operateur_superieur       [réduction par utilisation de la règle 73 (Expression)]
+    '\n'                      réduction par utilisation de la règle 52 (Operation)
+    '\n'                      [réduction par utilisation de la règle 73 (Expression)]
+    $défaut                  réduction par utilisation de la règle 52 (Operation)
+
+
+État 116
+
+   52 Operation: Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   71           | Expression operateur_multiplier Expression .
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    parentheseFermee          réduction par utilisation de la règle 52 (Operation)
+    parentheseFermee          [réduction par utilisation de la règle 71 (Expression)]
+    lire                      réduction par utilisation de la règle 52 (Operation)
+    lire                      [réduction par utilisation de la règle 71 (Expression)]
+    ecrire                    réduction par utilisation de la règle 52 (Operation)
+    ecrire                    [réduction par utilisation de la règle 71 (Expression)]
+    fin                       réduction par utilisation de la règle 52 (Operation)
+    fin                       [réduction par utilisation de la règle 71 (Expression)]
+    retourne                  réduction par utilisation de la règle 52 (Operation)
+    retourne                  [réduction par utilisation de la règle 71 (Expression)]
+    debut_si                  réduction par utilisation de la règle 52 (Operation)
+    debut_si                  [réduction par utilisation de la règle 71 (Expression)]
+    sinon                     réduction par utilisation de la règle 52 (Operation)
+    sinon                     [réduction par utilisation de la règle 71 (Expression)]
+    fin_si                    réduction par utilisation de la règle 52 (Operation)
+    fin_si                    [réduction par utilisation de la règle 71 (Expression)]
+    debut_switch              réduction par utilisation de la règle 52 (Operation)
+    debut_switch              [réduction par utilisation de la règle 71 (Expression)]
+    debut_pour                réduction par utilisation de la règle 52 (Operation)
+    debut_pour                [réduction par utilisation de la règle 71 (Expression)]
+    faire                     réduction par utilisation de la règle 52 (Operation)
+    faire                     [réduction par utilisation de la règle 71 (Expression)]
+    fin_pour                  réduction par utilisation de la règle 52 (Operation)
+    fin_pour                  [réduction par utilisation de la règle 71 (Expression)]
+    debut_tant_que            réduction par utilisation de la règle 52 (Operation)
+    debut_tant_que            [réduction par utilisation de la règle 71 (Expression)]
+    fin_tant_que              réduction par utilisation de la règle 52 (Operation)
+    fin_tant_que              [réduction par utilisation de la règle 71 (Expression)]
+    variable                  réduction par utilisation de la règle 52 (Operation)
+    variable                  [réduction par utilisation de la règle 71 (Expression)]
+    operateur_plus            [réduction par utilisation de la règle 52 (Operation)]
+    operateur_plus            [réduction par utilisation de la règle 71 (Expression)]
+    operateur_diviser         [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser         [réduction par utilisation de la règle 71 (Expression)]
+    operateur_moins           [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins           [réduction par utilisation de la règle 71 (Expression)]
+    operateur_modulo          [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo          [réduction par utilisation de la règle 71 (Expression)]
+    operateur_multiplier      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier      [réduction par utilisation de la règle 71 (Expression)]
+    operateur_et              réduction par utilisation de la règle 52 (Operation)
+    operateur_et              [réduction par utilisation de la règle 71 (Expression)]
+    operateur_ou              réduction par utilisation de la règle 52 (Operation)
+    operateur_ou              [réduction par utilisation de la règle 71 (Expression)]
+    operateur_egal_egal       réduction par utilisation de la règle 52 (Operation)
+    operateur_egal_egal       [réduction par utilisation de la règle 71 (Expression)]
+    operateur_inferieur_egal  réduction par utilisation de la règle 52 (Operation)
+    operateur_inferieur_egal  [réduction par utilisation de la règle 71 (Expression)]
+    operateur_superieur_egal  réduction par utilisation de la règle 52 (Operation)
+    operateur_superieur_egal  [réduction par utilisation de la règle 71 (Expression)]
+    operateur_non_egal        réduction par utilisation de la règle 52 (Operation)
+    operateur_non_egal        [réduction par utilisation de la règle 71 (Expression)]
+    operateur_inferieur       réduction par utilisation de la règle 52 (Operation)
+    operateur_inferieur       [réduction par utilisation de la règle 71 (Expression)]
+    operateur_superieur       réduction par utilisation de la règle 52 (Operation)
+    operateur_superieur       [réduction par utilisation de la règle 71 (Expression)]
+    '\n'                      réduction par utilisation de la règle 52 (Operation)
+    '\n'                      [réduction par utilisation de la règle 71 (Expression)]
+    $défaut                  réduction par utilisation de la règle 52 (Operation)
+
+
+État 117
+
+   52 Operation: Expression .
+   58 operateur_relationnel: Expression operateur_egal_egal Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    operateur_plus        [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser     [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins       [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier  [réduction par utilisation de la règle 52 (Operation)]
+    operateur_et          réduction par utilisation de la règle 52 (Operation)
+    operateur_et          [réduction par utilisation de la règle 58 (operateur_relationnel)]
+    operateur_ou          réduction par utilisation de la règle 52 (Operation)
+    operateur_ou          [réduction par utilisation de la règle 58 (operateur_relationnel)]
+    '\n'                  réduction par utilisation de la règle 52 (Operation)
+    '\n'                  [réduction par utilisation de la règle 58 (operateur_relationnel)]
+    $défaut              réduction par utilisation de la règle 52 (Operation)
+
+
+État 118
+
+   52 Operation: Expression .
+   59 operateur_relationnel: Expression operateur_inferieur_egal Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    operateur_plus        [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser     [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins       [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier  [réduction par utilisation de la règle 52 (Operation)]
+    operateur_et          réduction par utilisation de la règle 52 (Operation)
+    operateur_et          [réduction par utilisation de la règle 59 (operateur_relationnel)]
+    operateur_ou          réduction par utilisation de la règle 52 (Operation)
+    operateur_ou          [réduction par utilisation de la règle 59 (operateur_relationnel)]
+    '\n'                  réduction par utilisation de la règle 52 (Operation)
+    '\n'                  [réduction par utilisation de la règle 59 (operateur_relationnel)]
+    $défaut              réduction par utilisation de la règle 52 (Operation)
+
+
+État 119
+
+   52 Operation: Expression .
+   60 operateur_relationnel: Expression operateur_superieur_egal Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    operateur_plus        [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser     [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins       [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier  [réduction par utilisation de la règle 52 (Operation)]
+    operateur_et          réduction par utilisation de la règle 52 (Operation)
+    operateur_et          [réduction par utilisation de la règle 60 (operateur_relationnel)]
+    operateur_ou          réduction par utilisation de la règle 52 (Operation)
+    operateur_ou          [réduction par utilisation de la règle 60 (operateur_relationnel)]
+    '\n'                  réduction par utilisation de la règle 52 (Operation)
+    '\n'                  [réduction par utilisation de la règle 60 (operateur_relationnel)]
+    $défaut              réduction par utilisation de la règle 52 (Operation)
+
+
+État 120
+
+   52 Operation: Expression .
+   63 operateur_relationnel: Expression operateur_non_egal Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    operateur_plus        [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser     [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins       [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier  [réduction par utilisation de la règle 52 (Operation)]
+    operateur_et          réduction par utilisation de la règle 52 (Operation)
+    operateur_et          [réduction par utilisation de la règle 63 (operateur_relationnel)]
+    operateur_ou          réduction par utilisation de la règle 52 (Operation)
+    operateur_ou          [réduction par utilisation de la règle 63 (operateur_relationnel)]
+    '\n'                  réduction par utilisation de la règle 52 (Operation)
+    '\n'                  [réduction par utilisation de la règle 63 (operateur_relationnel)]
+    $défaut              réduction par utilisation de la règle 52 (Operation)
+
+
+État 121
+
+   52 Operation: Expression .
+   61 operateur_relationnel: Expression operateur_inferieur Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    operateur_plus        [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser     [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins       [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier  [réduction par utilisation de la règle 52 (Operation)]
+    operateur_et          réduction par utilisation de la règle 52 (Operation)
+    operateur_et          [réduction par utilisation de la règle 61 (operateur_relationnel)]
+    operateur_ou          réduction par utilisation de la règle 52 (Operation)
+    operateur_ou          [réduction par utilisation de la règle 61 (operateur_relationnel)]
+    '\n'                  réduction par utilisation de la règle 52 (Operation)
+    '\n'                  [réduction par utilisation de la règle 61 (operateur_relationnel)]
+    $défaut              réduction par utilisation de la règle 52 (Operation)
+
+
+État 122
+
+   52 Operation: Expression .
+   62 operateur_relationnel: Expression operateur_superieur Expression .
+   69 Expression: Expression . operateur_plus Expression
+   70           | Expression . operateur_moins Expression
+   71           | Expression . operateur_multiplier Expression
+   72           | Expression . operateur_diviser Expression
+   73           | Expression . operateur_modulo Expression
+
+    operateur_plus        décalage et aller à l'état 78
+    operateur_diviser     décalage et aller à l'état 79
+    operateur_moins       décalage et aller à l'état 80
+    operateur_modulo      décalage et aller à l'état 81
+    operateur_multiplier  décalage et aller à l'état 82
+
+    operateur_plus        [réduction par utilisation de la règle 52 (Operation)]
+    operateur_diviser     [réduction par utilisation de la règle 52 (Operation)]
+    operateur_moins       [réduction par utilisation de la règle 52 (Operation)]
+    operateur_modulo      [réduction par utilisation de la règle 52 (Operation)]
+    operateur_multiplier  [réduction par utilisation de la règle 52 (Operation)]
+    operateur_et          réduction par utilisation de la règle 52 (Operation)
+    operateur_et          [réduction par utilisation de la règle 62 (operateur_relationnel)]
+    operateur_ou          réduction par utilisation de la règle 52 (Operation)
+    operateur_ou          [réduction par utilisation de la règle 62 (operateur_relationnel)]
+    '\n'                  réduction par utilisation de la règle 52 (Operation)
+    '\n'                  [réduction par utilisation de la règle 62 (operateur_relationnel)]
+    $défaut              réduction par utilisation de la règle 52 (Operation)
+
+
+État 123
+
+   37 Complexe_Switch: ENTIER . double_point Ensemble fin Complexe_Switch
+
+    double_point  décalage et aller à l'état 142
+
+
+État 124
+
+   38 Complexe_Switch: defaut . double_point Ensemble fin
+
+    double_point  décalage et aller à l'état 143
+
+
+État 125
+
+   26 Complexe: debut_switch variable debut_parmi Complexe_Switch . fin_switch
+
+    fin_switch  décalage et aller à l'état 144
+
+
+État 126
+
+   33 Variable_ou_nombre: ENTIER .
+
+    $défaut  réduction par utilisation de la règle 33 (Variable_ou_nombre)
+
+
+État 127
+
+   32 Variable_ou_nombre: variable .
+
+    $défaut  réduction par utilisation de la règle 32 (Variable_ou_nombre)
+
+
+État 128
+
+   27 Complexe: debut_pour variable debut_pour_allant_de Variable_ou_nombre . debut_pour_a POUR_PAS faire Ensemble fin_pour
+
+    debut_pour_a  décalage et aller à l'état 145
+
+
+État 129
+
+   29 Complexe: faire Ensemble debut_tant_que Operation_logique . fin_tant_que
+
+    fin_tant_que  décalage et aller à l'état 146
+
+
+État 130
+
+   28 Complexe: debut_tant_que Operation_logique faire Ensemble . fin_tant_que
+
+    fin_tant_que  décalage et aller à l'état 147
+
+
+État 131
+
+   44 AppelFonctionSeule: variable parentheseOuverte ListeArgumentsAppel parentheseFermee .
+
+    $défaut  réduction par utilisation de la règle 44 (AppelFonctionSeule)
+
+
+État 132
+
+   47 ArgumentsAppel: virgule . ArgumentAppel
+
+    variable  décalage et aller à l'état 93
+
+    ArgumentAppel  aller à l'état 148
+
+
+État 133
+
+   45 ListeArgumentsAppel: ArgumentAppel ArgumentsAppel .
+
+    $défaut  réduction par utilisation de la règle 45 (ListeArgumentsAppel)
+
+
+État 134
+
+    2 Fonctions: fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFonction Fonctions .
+
+    $défaut  réduction par utilisation de la règle 2 (Fonctions)
+
+
+État 135
+
+   13 ContenuFonction: Declarations debut . ListeInstructions Retourner fin
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    lire            [réduction par utilisation de la règle 24 (Ensemble)]
+    ecrire          [réduction par utilisation de la règle 24 (Ensemble)]
+    retourne        réduction par utilisation de la règle 21 (ListeInstructions)
+    retourne        [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_si        [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_switch    [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_pour      [réduction par utilisation de la règle 24 (Ensemble)]
+    faire           [réduction par utilisation de la règle 24 (Ensemble)]
+    debut_tant_que  [réduction par utilisation de la règle 24 (Ensemble)]
+    variable        [réduction par utilisation de la règle 24 (Ensemble)]
+    $défaut        réduction par utilisation de la règle 21 (ListeInstructions)
+
+    ListeInstructions   aller à l'état 149
+    Ensemble            aller à l'état 32
+    Complexe            aller à l'état 33
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 136
+
+   10 Arguments: virgule Type Argument . Arguments
+
+    virgule  décalage et aller à l'état 64
+
+    $défaut  réduction par utilisation de la règle 11 (Arguments)
+
+    Arguments  aller à l'état 150
+
+
+État 137
+
+   14 ContenuProcedure: Declarations debut ListeInstructions . fin
+
+    fin  décalage et aller à l'état 151
+
+
+État 138
+
+   68 Expression: variable parentheseOuverte ListeArgumentsAppel parentheseFermee .
+
+    $défaut  réduction par utilisation de la règle 68 (Expression)
+
+
+État 139
+
+   35 Complexe_Sinon: sinon . Ensemble
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    $défaut  réduction par utilisation de la règle 24 (Ensemble)
+
+    Ensemble            aller à l'état 152
+    Complexe            aller à l'état 33
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 140
+
+   34 Complexe_Si: Ensemble Complexe_Sinon . fin_si
+
+    fin_si  décalage et aller à l'état 153
+
+
+État 141
+
+   25 Complexe: debut_si Operation_logique debut_alors Complexe_Si fin_si .
+
+    $défaut  réduction par utilisation de la règle 25 (Complexe)
+
+
+État 142
+
+   37 Complexe_Switch: ENTIER double_point . Ensemble fin Complexe_Switch
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    $défaut  réduction par utilisation de la règle 24 (Ensemble)
+
+    Ensemble            aller à l'état 154
+    Complexe            aller à l'état 33
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 143
+
+   38 Complexe_Switch: defaut double_point . Ensemble fin
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    $défaut  réduction par utilisation de la règle 24 (Ensemble)
+
+    Ensemble            aller à l'état 155
+    Complexe            aller à l'état 33
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 144
+
+   26 Complexe: debut_switch variable debut_parmi Complexe_Switch fin_switch .
+
+    $défaut  réduction par utilisation de la règle 26 (Complexe)
+
+
+État 145
+
+   27 Complexe: debut_pour variable debut_pour_allant_de Variable_ou_nombre debut_pour_a . POUR_PAS faire Ensemble fin_pour
+
+    debut_pour_pas  décalage et aller à l'état 156
+
+    $défaut  réduction par utilisation de la règle 31 (POUR_PAS)
+
+    POUR_PAS  aller à l'état 157
+
+
+État 146
+
+   29 Complexe: faire Ensemble debut_tant_que Operation_logique fin_tant_que .
+
+    $défaut  réduction par utilisation de la règle 29 (Complexe)
+
+
+État 147
+
+   28 Complexe: debut_tant_que Operation_logique faire Ensemble fin_tant_que .
+
+    $défaut  réduction par utilisation de la règle 28 (Complexe)
+
+
+État 148
+
+   47 ArgumentsAppel: virgule ArgumentAppel .
+
+    $défaut  réduction par utilisation de la règle 47 (ArgumentsAppel)
+
+
+État 149
+
+   13 ContenuFonction: Declarations debut ListeInstructions . Retourner fin
+
+    retourne  décalage et aller à l'état 158
+
+    Retourner  aller à l'état 159
+
+
+État 150
+
+   10 Arguments: virgule Type Argument Arguments .
+
+    $défaut  réduction par utilisation de la règle 10 (Arguments)
+
+
+État 151
+
+   14 ContenuProcedure: Declarations debut ListeInstructions fin .
+
+    $défaut  réduction par utilisation de la règle 14 (ContenuProcedure)
+
+
+État 152
+
+   35 Complexe_Sinon: sinon Ensemble .
+
+    $défaut  réduction par utilisation de la règle 35 (Complexe_Sinon)
+
+
+État 153
+
+   34 Complexe_Si: Ensemble Complexe_Sinon fin_si .
+
+    $défaut  réduction par utilisation de la règle 34 (Complexe_Si)
+
+
+État 154
+
+   37 Complexe_Switch: ENTIER double_point Ensemble . fin Complexe_Switch
+
+    fin  décalage et aller à l'état 160
+
+
+État 155
+
+   38 Complexe_Switch: defaut double_point Ensemble . fin
+
+    fin  décalage et aller à l'état 161
+
+
+État 156
+
+   30 POUR_PAS: debut_pour_pas . Variable_ou_nombre
+
+    ENTIER    décalage et aller à l'état 126
+    variable  décalage et aller à l'état 127
+
+    Variable_ou_nombre  aller à l'état 162
+
+
+État 157
+
+   27 Complexe: debut_pour variable debut_pour_allant_de Variable_ou_nombre debut_pour_a POUR_PAS . faire Ensemble fin_pour
+
+    faire  décalage et aller à l'état 163
+
+
+État 158
+
+   16 Retourner: retourne . Variable_ou_nombre
+
+    ENTIER    décalage et aller à l'état 126
+    variable  décalage et aller à l'état 127
+
+    Variable_ou_nombre  aller à l'état 164
+
+
+État 159
+
+   13 ContenuFonction: Declarations debut ListeInstructions Retourner . fin
+
+    fin  décalage et aller à l'état 165
+
+
+État 160
+
+   37 Complexe_Switch: ENTIER double_point Ensemble fin . Complexe_Switch
+
+    ENTIER  décalage et aller à l'état 123
+    defaut  décalage et aller à l'état 124
+
+    Complexe_Switch  aller à l'état 166
+
+
+État 161
+
+   38 Complexe_Switch: defaut double_point Ensemble fin .
+
+    $défaut  réduction par utilisation de la règle 38 (Complexe_Switch)
+
+
+État 162
+
+   30 POUR_PAS: debut_pour_pas Variable_ou_nombre .
+
+    $défaut  réduction par utilisation de la règle 30 (POUR_PAS)
+
+
+État 163
+
+   27 Complexe: debut_pour variable debut_pour_allant_de Variable_ou_nombre debut_pour_a POUR_PAS faire . Ensemble fin_pour
+
+    lire            décalage et aller à l'état 23
+    ecrire          décalage et aller à l'état 24
+    debut_si        décalage et aller à l'état 25
+    debut_switch    décalage et aller à l'état 26
+    debut_pour      décalage et aller à l'état 27
+    faire           décalage et aller à l'état 28
+    debut_tant_que  décalage et aller à l'état 29
+    variable        décalage et aller à l'état 30
+
+    $défaut  réduction par utilisation de la règle 24 (Ensemble)
+
+    Ensemble            aller à l'état 167
+    Complexe            aller à l'état 33
+    Instruction         aller à l'état 34
+    AppelFonctionSeule  aller à l'état 35
+    Calcul              aller à l'état 36
+
+
+État 164
+
+   16 Retourner: retourne Variable_ou_nombre .
+
+    $défaut  réduction par utilisation de la règle 16 (Retourner)
+
+
+État 165
+
+   13 ContenuFonction: Declarations debut ListeInstructions Retourner fin .
+
+    $défaut  réduction par utilisation de la règle 13 (ContenuFonction)
+
+
+État 166
+
+   37 Complexe_Switch: ENTIER double_point Ensemble fin Complexe_Switch .
+
+    $défaut  réduction par utilisation de la règle 37 (Complexe_Switch)
+
+
+État 167
+
+   27 Complexe: debut_pour variable debut_pour_allant_de Variable_ou_nombre debut_pour_a POUR_PAS faire Ensemble . fin_pour
+
+    fin_pour  décalage et aller à l'état 168
+
+
+État 168
+
+   27 Complexe: debut_pour variable debut_pour_allant_de Variable_ou_nombre debut_pour_a POUR_PAS faire Ensemble fin_pour .
+
+    $défaut  réduction par utilisation de la règle 27 (Complexe)

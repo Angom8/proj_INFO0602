@@ -10,7 +10,7 @@ YACC = yacc
 YACCFLAGS = -vd
 YACCLIB = 
 
-$(EXECUTABLE): y.tab.o lex.yy.o
+$(EXECUTABLE): y.tab.o lex.yy.o fichier.o quadruplet.o
 	gcc -o $(EXECUTABLE) lex.yy.o y.tab.o $(LEXLIB) $(YACCLIB) -W -Wall
 
 lex.yy.o: lex.yy.c y.tab.h
@@ -24,6 +24,12 @@ y.tab.o : y.tab.h y.tab.c
 
 y.tab.c y.tab.h : $(YACC_FILE)
 	$(YACC) $(YACCFLAGS) $(YACC_FILE)
+	
+fichier.o : fichier.h fichier.c
+	gcc -c fichier.h fichier.c -W -Wall
+	
+quadruplet.o : quadruplet.h quadruplet.c
+	gcc -c quadruplet.h quadruplet.c -W -Wall
 
 clean:
 	rm -f *~ \#* *.o

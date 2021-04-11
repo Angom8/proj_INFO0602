@@ -8,33 +8,37 @@
 int div_zero = FALSE;
 %}
 
-%token ENTIER
+%token ENTIER REEL
 %nonassoc '+'
 %left '*'
 %nonassoc '-'
 %right '/'
 
 %token  parentheseOuverte parentheseFermee
-%token virgule, double_point
-%token fonction, procedure, algorithme
+%token virgule double_point egal
+%token fonction procedure algorithme
+%token lire ecrire
 %token declaration
-%token debut, fin, retourne
-%token debut_si, debut_alors, sinon, fin_si
-%token debut_switch,debut_parmi, fin_switch
-%token debut_pour, debut_pour_allant_de, debut_pour_pas, faire, fin_pour
-%token debut_tant_que, fin_tant_que
-%token typeReel, typeEntier, variable
+%token debut fin retourne
+%token debut_si debut_alors sinon fin_si
+%token debut_switch debut_parmi fin_switch defaut
+%token debut_pour debut_pour_allant_de debut_pour_pas faire fin_pour debut_pour_a
+%token debut_tant_que fin_tant_que
+%token typeReel typeEntier variable
+%token operateur_plus operateur_diviser operateur_moins operateur_modulo operateur_multiplier
+%token operateur_et operateur_ou operateur_non
+%token operateur_egal_egal operateur_inferieur_egal operateur_superieur_egal operateur_non_egal operateur_inferieur operateur_superieur
 
-%start Input
+%start DebutGlobal
 
 %%
 
  /* On peut déclarer des variables globales, mais ensuite, il faut passer à l'execution du main. 
     La déclaration/définition de fonctions peut se faire avant ou après le main  */ 
-Input:		Fonctions Main 
+DebutGlobal:		Fonctions Main 
 
 //Fonction x(int a, int b) : entier
-Fonctions : 	fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFontion Fonctions | procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuProcedure Fonctions | ; 
+Fonctions : 	fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFonction Fonctions | procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuProcedure Fonctions | ; 
 
 //Liste des arguments, ou rien
 ContenuParenthesesFonction : Type Argument Arguments | ;
@@ -42,7 +46,7 @@ ContenuParenthesesFonction : Type Argument Arguments | ;
 //La fonction a un retour, ou non. Si on ne séparait pas les procédures des fonctions : | ;
 Retour : double_point Type ;
 
-Type : TypeReel | TypeEntier
+Type : typeReel | typeEntier
 
 //... , int b
 Arguments : virgule Type Argument Arguments  | ; 
@@ -68,8 +72,8 @@ Ensemble : Complexe | Instruction | ;
 Complexe : debut_si Operation_logique debut_alors Complexe_Si fin_si
 | debut_switch variable debut_parmi Complexe_Switch fin_switch
 | debut_pour variable debut_pour_allant_de Variable_ou_nombre debut_pour_a POUR_PAS faire Ensemble fin_pour
-| debut_tant_que Opération_logique faire Ensemble fin_tant_que
-| faire Ensemble debut_tant_que Opération_logique fin_tant_que
+| debut_tant_que Operation_logique faire Ensemble fin_tant_que
+| faire Ensemble debut_tant_que Operation_logique fin_tant_que
 
 POUR_PAS : debut_pour_pas Variable_ou_nombre | ; 
 Variable_ou_nombre : variable | ENTIER
@@ -82,10 +86,10 @@ Complexe_Sinon : sinon Ensemble | ;
 Complexe_Switch : ENTIER double_point Ensemble fin Complexe_Switch | defaut double_point Ensemble fin
 
 
-Opération_logique : 
+Operation_logique : 
 
 //On peut avoir un simple appel de fonction de type lire() ou mafonction(args) en AppelFonction. Calcul correspond à z = x + y ou z = x * lire() + y * mafonction() ou z = mafonction()
-Instruction : Calcul | AppelFonction
+Instruction : Calcul | AppelFonctionSeule
 
 AppelFonctionSeule : lire parentheseOuverte variable parentheseFermee | ecrire parentheseOuverte variable parentheseFermee | variable parentheseOuverte ListeArgumentsAppel parentheseFermee
 
@@ -96,18 +100,7 @@ ArgumentAppel : variable
 
 Calcul : variable egal Operation
 
-Operation : parentheseOuverte Expression Operateur Expression parentheseFermee | Expression Operateur Expression | Expression
-Expression : Operation | Variable_ou_nombre | variable parentheseOuverte ListeArgumentsAppel parentheseFermee
-
-
-
-
-lprogramme : programme | lprogramme programme;
-
-
-
-
-
+Operation : parentheseOuverte Expression parentheseFermee | Expression
 
 Operation_logique: 
 	  operateur_logique '\n' {
@@ -138,53 +131,60 @@ Operation_logique:
 	};
 	
 operateur_logique:
-	  operateur_relationnel 'ET' operateur_relationnel{
+	  operateur_relationnel operateur_et operateur_relationnel{
 		$$ = $1 && $3;
 	}
-	| operateur_relationnel 'OU' operateur_relationnel{
+	| operateur_relationnel operateur_ou operateur_relationnel{
 		$$ = $1 || $3;
 	}
-	| 'NON' operateur_relationnel{
+	| operateur_non operateur_relationnel{
 		$$ = !$2;
 	};
 
 operateur_relationnel: 
-	  expression '==' expression {
+	  Expression operateur_egal_egal Expression {
 		$$ = $1 == $3;
 	}
-	| expression '<=' expression {
+	| Expression operateur_inferieur_egal Expression {
 		$$ = $1 <= $3;
 	}
-	| expression '>=' expression {
+	| Expression operateur_superieur_egal Expression {
 		$$ = $1 >= $3;
 	}
-	| expression '<' expression {
+	| Expression operateur_inferieur Expression {
 		$$ = $1 < $3;
 	}
-	| expression '>' expression {
+	| Expression operateur_superieur Expression {
 		$$ = $1 > $3;
 	}
-	| expression '!=' expression {
+	| Expression operateur_non_egal Expression {
 		$$ = $1 != $3;
 	};
 
-expression: ENTIER
-      | expression '+' expression {
+Expression: ENTIER
+	| REEL
+	| Variable_ou_nombre
+	| Operation
+	| variable parentheseOuverte ListeArgumentsAppel parentheseFermee
+      | Expression operateur_plus Expression {
 		$$ = $1 + $3;
       }
-      | expression '-' expression {
+      | Expression operateur_moins Expression {
 		$$ = $1 - $3;
       }
-      | expression '*' expression {
+      | Expression operateur_multiplier Expression {
       	$$ = $1 * $3;
       }
-      | expression '/' expression {
+      | Expression operateur_diviser Expression {
       	if($3 != 0){
 			$$ = $1 / $3;
 		}else{
 			$$ = $1;
 			div_zero = TRUE;
 		}
+      }
+      | Expression operateur_modulo Expression {
+      		$$ = $1%$3
       };
 
 %%
