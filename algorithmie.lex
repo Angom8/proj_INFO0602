@@ -32,14 +32,7 @@ void yyerror(const char *erreurMsg);
 					yylval = atoi(yytext);
 					return ENTIER;
 				};
-	
-Fonction      { return fonction  ; };
-Procedure 	{return procedure;};
-Déclaration|Declaration|Déclarations|Declarations     { return declaration; };
-Début|Debut   { return debut; }
-Fin|fin|FIN   { return fin; }
-Algorithme { return algorithme; };
-retourner | RETOURNER {return retourne; };
+
 
 \(     { return parentheseOuverte; } ;
 \)         { return parentheseFermee; } ;
@@ -88,6 +81,13 @@ defaut|DEFAUT {return defaut;};
 réél|reel|Reel|Réel {return typeReel;};
 entier|Entier {return typeEntier;};
 
+Fonction      { return fonction  ; };
+Procedure 	{return procedure;};
+Déclaration|Declaration|Déclarations|Declarations     { return declaration; };
+Début|Debut   { return debut; }
+Fin|fin|FIN   { return fin; }
+Algorithme { return algorithme; };
+retourner | RETOURNER {return retourne; };
 
 lire		{return fonction_lire;};
 ecrire {return fonction_ecrire;};

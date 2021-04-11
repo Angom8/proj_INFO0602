@@ -45,19 +45,23 @@ int div_zero = FALSE;
 DebutGlobal:		Fonctions Contenu 
 
 //Fonction x(int a, int b) : entier
-Fonctions : 	fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFonction Fonctions | procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Contenu Fonctions | ; 
+Fonctions : fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFonction Fonctions
+| procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Contenu Fonctions
+| ; 
 
 //Liste des arguments, ou rien
 ContenuParenthesesFonction : Type Argument Arguments | ;
+
+//... , int b
+Arguments : virgule Type Argument Arguments  | ; 
+Argument : variable
 
 //La fonction a un retour, ou non. Si on ne séparait pas les procédures des fonctions : | ;
 Retour : double_point Type ;
 
 Type : typeReel | typeEntier
 
-//... , int b
-Arguments : virgule Type Argument Arguments  | ; 
-Argument : variable
+
 
 //On pourrait faire une simplification avec Declarations debut ListeInstructions
 ContenuFonction : declaration Declarations debut ListeInstructions Retourner fin
@@ -95,22 +99,29 @@ Complexe_Switch : ENTIER double_point Ensemble fin Complexe_Switch | defaut doub
 Operation_logique : 
 
 //On peut avoir un simple appel de fonction de type lire() ou mafonction(args) en AppelFonction. Calcul correspond à z = x + y ou z = x * lire() + y * mafonction() ou z = mafonction()
-Instruction : Calcul | AppelFonctionSeule
+Instruction : Calcul
+|AppelFonctionSeule
 
-AppelFonctionSeule : fonction_lire parentheseOuverte variable parentheseFermee | fonction_ecrire parentheseOuverte variable parentheseFermee | variable parentheseOuverte ListeArgumentsAppel parentheseFermee
+
+AppelFonctionSeule : fonction_lire parentheseOuverte variable parentheseFermee
+| fonction_ecrire parentheseOuverte variable parentheseFermee
+| variable parentheseOuverte ListeArgumentsAppel parentheseFermee
 
 //On a pas le type lors d'un appel, on a donc une légère redondance
 ListeArgumentsAppel : ArgumentAppel ArgumentsAppel | ;
 ArgumentsAppel : virgule ArgumentAppel | ;
-ArgumentAppel : variable
+ArgumentAppel : Variable_ou_nombre
 
+//z = [Opération]
 Calcul : variable egal Operation
 
+
+//(fonction()) ou (a + b) ou a+b
 Operation : parentheseOuverte Expression parentheseFermee | Expression
 
 
-Operation_logique: 
-;/*
+Operation_logique: ;
+/*
 	  operateur_logique '\n' {
 		if(div_zero != TRUE){
 			if($1 == TRUE){
