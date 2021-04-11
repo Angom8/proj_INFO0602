@@ -3,21 +3,20 @@
 #define TRUE 1
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "fichier.h"
 
+
+
+FILE* entree;
 int div_zero = FALSE;
 %}
 
-%token ENTIER REEL
-%nonassoc '+'
-%left '*'
-%nonassoc '-'
-%right '/'
 
 %token  parentheseOuverte parentheseFermee
 %token virgule double_point egal
 %token fonction procedure algorithme
-%token lire ecrire
+%token fonction_lire fonction_ecrire
 %token declaration
 %token debut fin retourne
 %token debut_si debut_alors sinon fin_si
@@ -29,16 +28,24 @@ int div_zero = FALSE;
 %token operateur_et operateur_ou operateur_non
 %token operateur_egal_egal operateur_inferieur_egal operateur_superieur_egal operateur_non_egal operateur_inferieur operateur_superieur
 
+
+%token ENTIER
+%nonassoc operateur_plus
+%left operateur_mult
+%nonassoc operateur_moins
+%right operateur_diviser
+%nonassoc operateur_modulo
+
 %start DebutGlobal
 
 %%
 
  /* On peut déclarer des variables globales, mais ensuite, il faut passer à l'execution du main. 
     La déclaration/définition de fonctions peut se faire avant ou après le main  */ 
-DebutGlobal:		Fonctions Main 
+DebutGlobal:		Fonctions Contenu 
 
 //Fonction x(int a, int b) : entier
-Fonctions : 	fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFonction Fonctions | procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee ContenuProcedure Fonctions | ; 
+Fonctions : 	fonction variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Retour ContenuFonction Fonctions | procedure variable parentheseOuverte ContenuParenthesesFonction parentheseFermee Contenu Fonctions | ; 
 
 //Liste des arguments, ou rien
 ContenuParenthesesFonction : Type Argument Arguments | ;
@@ -53,9 +60,8 @@ Arguments : virgule Type Argument Arguments  | ;
 Argument : variable
 
 //On pourrait faire une simplification avec Declarations debut ListeInstructions
-ContenuFonction : Declarations debut ListeInstructions Retourner fin
-ContenuProcedure : Declarations debut ListeInstructions fin
-Main : Declarations debut ListeInstructions fin
+ContenuFonction : declaration Declarations debut ListeInstructions Retourner fin
+Contenu : declaration Declarations debut ListeInstructions fin
 
 //RETOURNE a ou RETOURNER 0
 Retourner : retourne Variable_ou_nombre
@@ -91,7 +97,7 @@ Operation_logique :
 //On peut avoir un simple appel de fonction de type lire() ou mafonction(args) en AppelFonction. Calcul correspond à z = x + y ou z = x * lire() + y * mafonction() ou z = mafonction()
 Instruction : Calcul | AppelFonctionSeule
 
-AppelFonctionSeule : lire parentheseOuverte variable parentheseFermee | ecrire parentheseOuverte variable parentheseFermee | variable parentheseOuverte ListeArgumentsAppel parentheseFermee
+AppelFonctionSeule : fonction_lire parentheseOuverte variable parentheseFermee | fonction_ecrire parentheseOuverte variable parentheseFermee | variable parentheseOuverte ListeArgumentsAppel parentheseFermee
 
 //On a pas le type lors d'un appel, on a donc une légère redondance
 ListeArgumentsAppel : ArgumentAppel ArgumentsAppel | ;
@@ -102,7 +108,9 @@ Calcul : variable egal Operation
 
 Operation : parentheseOuverte Expression parentheseFermee | Expression
 
+
 Operation_logique: 
+;/*
 	  operateur_logique '\n' {
 		if(div_zero != TRUE){
 			if($1 == TRUE){
@@ -160,10 +168,8 @@ operateur_relationnel:
 	| Expression operateur_non_egal Expression {
 		$$ = $1 != $3;
 	};
-
+*/
 Expression: ENTIER
-	| REEL
-	| Variable_ou_nombre
 	| Operation
 	| variable parentheseOuverte ListeArgumentsAppel parentheseFermee
       | Expression operateur_plus Expression {
@@ -184,7 +190,7 @@ Expression: ENTIER
 		}
       }
       | Expression operateur_modulo Expression {
-      		$$ = $1%$3
+      		$$ = $1%$3;
       };
 
 %%
@@ -192,14 +198,14 @@ Expression: ENTIER
 
 int main(int argc, char** argv) {
 
-	FILE* entree, * sortie;
-	char nomSortie[256];
+	FILE * sortie;
+	char * nomSortie;
 	
-	if (argv[1]) == NULL) {
+	if (argv[1]  == NULL) {
 		fprintf(stderr, "Erreur : Merci de préciser un fichier à analyser (avec l'extension).\nExemple : ./algorithmie exemple1.txt sortie.txt\nLe nom du fichier de sortie est optionnel (sortie.txt par défaut)\n");
 		exit(EXIT_FAILURE);
 	}
-	if (argv[2]) == NULL) {
+	if (argv[2] == NULL) {
 		nomSortie = "sortie.txt";
 	}
 	else{
@@ -213,8 +219,8 @@ int main(int argc, char** argv) {
 	entree = readFichier(argv[1]);
 	
 	//parse
-	yyin = entree;
-	yyparse();
+       yyrestart(entree);
+       yyparse();
 	
 	//fclose
 	fclose(entree);

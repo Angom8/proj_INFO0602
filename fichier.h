@@ -1,4 +1,7 @@
+
 #include "quadruplet.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
  * Ouvrir un fichier 
@@ -26,7 +29,7 @@ off_t getSizeFichier(FILE* fichier);
  * Retourner la ligne du fichier
  * @param fichier Le fichier et la chaine à remplir
  */
-void lectureLigne(FILE* fichier, char *s);
+int lectureLigne(FILE* fichier, char *s);
 
 /**
  * Fermer le fichier ouvert
@@ -39,7 +42,7 @@ int closeFichier(FILE* fichier);
  * Ecrit dans le fichier
  * @param fichier Le fichier et la chaine à remplir
  */
-void ecritureFichier(FILE* fichier, char * s);
+int ecritureFichier(FILE* fichier, char * s);
 
 /**
  * Retourner la ligne du fichier
