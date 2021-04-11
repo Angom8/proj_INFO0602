@@ -6,20 +6,6 @@ void yyerror(const char *erreurMsg);
 ESPACE  [\t ]+
 NOMBRE [0-9]+
 
-/* Gestion des commentaires */
-%option yylineno
-%x BLOCK_COMMENT
-%x LINE_COMMENT
-%%
-"/*" 			{BEGIN BLOCK_COMMENT;}
-<BLOCK_COMMENT>"*/" 	{BEGIN INITIAL;}
-<BLOCK_COMMENT>.	{}                // consume all characters 
-<BLOCK_COMMENT>\n     	{}                // consume all lines
-"//"         			{BEGIN LINE_COMMENT;}
-<LINE_COMMENT>\n 		{BEGIN INITIAL;}
-<LINE_COMMENT>.         {}                // consume all characters
-
-
 /* Nombres */
 
 

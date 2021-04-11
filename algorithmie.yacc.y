@@ -3,6 +3,8 @@
 #define TRUE 1
 #include <stdio.h>
 #include <stdlib.h>
+#include "fichier.h"
+
 int div_zero = FALSE;
 %}
 
@@ -187,7 +189,37 @@ expression: ENTIER
 
 %%
 
-int main(void) {
+
+int main(int argc, char** argv) {
+
+	FILE* entree, * sortie;
+	char nomSortie[256];
+	
+	if (argv[1]) == NULL) {
+		fprintf(stderr, "Erreur : Merci de préciser un fichier à analyser (avec l'extension).\nExemple : ./algorithmie exemple1.txt sortie.txt\nLe nom du fichier de sortie est optionnel (sortie.txt par défaut)\n");
+		exit(EXIT_FAILURE);
+	}
+	if (argv[2]) == NULL) {
+		nomSortie = "sortie.txt";
+	}
+	else{
+		strcpy(nomSortie, argv[2]);
+	}
+	
+	//ouverture du fichier de sortie
+	sortie = createFichier(nomSortie);
+	
+	//ouverture du fichier d'entrée
+	entree = readFichier(argv[1]);
+	
+	//parse
+	yyin = entree;
 	yyparse();
+	
+	//fclose
+	fclose(entree);
+	fclose(sortie);
+	
+	
 	return EXIT_SUCCESS;
 }
