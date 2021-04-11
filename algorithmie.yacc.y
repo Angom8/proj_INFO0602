@@ -51,15 +51,18 @@ ContenuFonction : Declarations debut ListeInstructions Retourner fin
 ContenuProcedure : Declarations debut ListeInstructions fin
 Main : Declarations debut ListeInstructions fin
 
-Retourner : retourne variable
+//RETOURNE a ou RETOURNER 0
+Retourner : retourne Variable_ou_nombre
 
 Declarations : Declaration Declarations | ;
 Declaration : variable double_point Type
 
 ListeInstructions : Ensemble ListeInstructions | ;
 
+
 Ensemble : Complexe | Instruction | ;
 
+//On gère les "complexes" génériquement avant de les renvoyer vers chaque. En gros, une boucler peut contenir un comple if, qui peut à son tour contenir un switch, etc.
 Complexe : debut_si Operation_logique debut_alors Complexe_Si fin_si
 | debut_switch variable debut_parmi Complexe_Switch fin_switch
 | debut_pour variable debut_pour_allant_de Variable_ou_nombre debut_pour_a POUR_PAS faire Ensemble fin_pour
@@ -73,24 +76,36 @@ Complexe_Si : Ensemble Complexe_Sinon fin_si
 
 Complexe_Sinon : sinon Ensemble | ;
 
+//On n'a pas de booleen ou de caractere. On utilise donc un entier pour le switch (reel = pas supporté dans les langages de toute façon)
 Complexe_Switch : ENTIER double_point Ensemble fin Complexe_Switch | defaut double_point Ensemble fin
 
 
 Opération_logique : 
 
-
+//On peut avoir un simple appel de fonction de type lire() ou mafonction(args) en AppelFonction. Calcul correspond à z = x + y ou z = x * lire() + y * mafonction() ou z = mafonction()
 Instruction : Calcul | AppelFonction
 
 AppelFonctionSeule : lire parentheseOuverte variable parentheseFermee | ecrire parentheseOuverte variable parentheseFermee | variable parentheseOuverte ListeArgumentsAppel parentheseFermee
 
+//On a pas le type lors d'un appel, on a donc une légère redondance
 ListeArgumentsAppel : ArgumentAppel ArgumentsAppel | ;
 ArgumentsAppel : virgule ArgumentAppel | ;
 ArgumentAppel : variable
+
+Calcul : variable egal Operation
+
+Operation : parentheseOuverte Expression Operateur Expression parentheseFermee | Expression Operateur Expression | Expression
+Expression : Operation | Variable_ou_nombre | variable parentheseOuverte ListeArgumentsAppel parentheseFermee
 
 
 
 
 lprogramme : programme | lprogramme programme;
+
+
+
+
+
 
 Operation_logique: 
 	  operateur_logique '\n' {
